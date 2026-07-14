@@ -55,7 +55,7 @@ export default function Calendar() {
 
           <div className="links">
 
-            <button onClick={() => navigate("/House")}>
+            <button onClick={() => navigate("/home")}>
               <i className="fa-solid fa-house"></i>
             </button>
 
@@ -90,7 +90,7 @@ export default function Calendar() {
         ))}
       </div>
       <div className="calendar">
-        <h3>{mes}</h3>
+        <h3>{mes} de {hoje.getFullYear()}</h3>
 
         <div className="calendar-grid">
           {dias.map((dia) => (
@@ -99,14 +99,20 @@ export default function Calendar() {
               <span className="day-number">{dia}</span>
 
               {card
-                .filter(
-                  (ca) => new Date(ca.data_entrega).getDate() === dia
-                )
+                .filter((ca) => {
+                  const data = new Date(ca.data_entrega);
+
+                  return (
+                    data.getDate() === dia &&
+                    data.getMonth() === hoje.getMonth() &&
+                    data.getFullYear() === hoje.getFullYear()
+                  );
+                })
                 .map((ca) => (
                   <div key={ca.id} className="card">
                     <span>{ca.title}</span>
                   </div>
-                ))}
+              ))}
             </div>
           ))}
         </div>

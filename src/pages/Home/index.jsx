@@ -33,11 +33,6 @@ export default function Home() {
 
   return (
     <div>
-      <div className="background">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
     <div className="topo">
 
       <div className="barra">
