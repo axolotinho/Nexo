@@ -56,12 +56,6 @@ export default function Login() {
 
   return (
     <div>
-      <div className="background">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-
       <div className="header">
         <h2>
           {title.split("").map((letter, index) => (

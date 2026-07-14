@@ -14,31 +14,24 @@ export default function Welcome() {
     }
   }, []);
   return (
-    <div>
-      <div className="background">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-      <div className="welcome">
-        <h3>
-          {subtitle.split("").map((letter, index) => (
-            <span key={index}>
-              {letter === " " ? "\u00A0" : letter}
-            </span>
-          ))}
-        </h3>
+    <div className="welcome">
+      <h3>
+        {subtitle.split("").map((letter, index) => (
+          <span key={index}>
+            {letter === " " ? "\u00A0" : letter}
+          </span>
+        ))}
+      </h3>
 
-        <h1>
-          {title.split("").map((letter, index) => (
-            <span key={index}>{letter}</span>
-          ))}
-        </h1>
+      <h1>
+        {title.split("").map((letter, index) => (
+          <span key={index}>{letter}</span>
+        ))}
+      </h1>
 
-        <div className="buttons">
-          <button onClick={() => navigate("/login")}>Gestor</button>
-          <button onClick={() => navigate("/login")}>Funcionário</button>
-        </div>
+      <div className="buttons">
+        <button onClick={() => navigate("/login")}>Gestor</button>
+        <button onClick={() => navigate("/login")}>Funcionário</button>
       </div>
     </div>
   );

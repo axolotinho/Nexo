@@ -38,23 +38,21 @@ export default function Home() {
         <span></span>
         <span></span>
       </div>
-      <div className='topo'>
-        <div className="header">
+    <div className="topo">
+
+      <div className="barra">
+
+        <div className="header-home">
           <h2>
             {title.split("").map((letter, index) => (
               <span key={index}>{letter}</span>
             ))}
           </h2>
-
-          <h3>
-            {description.split("").map((letter, index) => (
-              <span key={index}>
-                {letter === " " ? "\u00A0" : letter}
-              </span>
-            ))}
-          </h3>
         </div>
-        <div className="rodape">
+
+
+        <div className="links">
+
           <button className="active">
             <i className="fa-solid fa-house"></i>
           </button>
@@ -74,8 +72,21 @@ export default function Home() {
           <button onClick={() => navigate("/Ia")}>
             <i className="fa-solid fa-dove"></i>
           </button>
+
         </div>
+
       </div>
+
+    </div>
+
+
+    <div className="subtitulo">
+      {description.split("").map((letter, index) => (
+        <span key={index}>
+          {letter === " " ? "\u00A0" : letter}
+        </span>
+      ))}
+    </div>
       <div className="layout">
 
         <div className="kanban">

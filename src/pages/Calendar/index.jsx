@@ -5,6 +5,7 @@ import './style.css'
 
 export default function Calendar() {
   const title = "Calendário"
+  const description = "Veja como está sua agenda"
   const hoje = new Date();
   const dia = hoje.getDate();
   const mes = hoje.toLocaleString("pt-BR", {
@@ -39,17 +40,54 @@ export default function Calendar() {
 
   return (
     <div>
-      <div className="background">
-        <span></span>
-        <span></span>
-        <span></span>
+      <div className="topo">
+
+        <div className="barra">
+
+          <div className="header-home">
+            <h2>
+              {title.split("").map((letter, index) => (
+                <span key={index}>{letter}</span>
+              ))}
+            </h2>
+          </div>
+
+
+          <div className="links">
+
+            <button onClick={() => navigate("/House")}>
+              <i className="fa-solid fa-house"></i>
+            </button>
+
+            <button className="active">
+              <i className="fa-solid fa-calendar"></i>
+            </button>
+
+            <button onClick={() => navigate("/Chat")}>
+              <i className="fa-solid fa-comment-dots"></i>
+            </button>
+
+            <button onClick={() => navigate("/Task")}>
+              {dia}
+            </button>
+
+            <button onClick={() => navigate("/Ia")}>
+              <i className="fa-solid fa-dove"></i>
+            </button>
+
+          </div>
+
+        </div>
+
       </div>
-      <div className="header">
-        <h2>
-          {title.split("").map((letter, index) => (
-            <span key={index}>{letter}</span>
-          ))}
-        </h2>
+
+
+      <div className="subtitulo">
+        {description.split("").map((letter, index) => (
+          <span key={index}>
+            {letter === " " ? "\u00A0" : letter}
+          </span>
+        ))}
       </div>
       <div className="calendar">
         <h3>{mes}</h3>
@@ -72,13 +110,6 @@ export default function Calendar() {
             </div>
           ))}
         </div>
-      </div>
-      <div className='rodape'>
-        <button onClick={() => navigate("/Home")}><i class="fa-solid fa-house"></i></button>
-        <button className='active'><i class="fa-solid fa-calendar"></i></button>
-        <button onClick={() => navigate("/Chat")}><i class="fa-solid fa-comment-dots"></i></button>
-        <button onClick={() => navigate("/Task")}>{dia}</button>
-        <button onClick={() => navigate("/Ia")}><i class="fa-solid fa-dove"></i></button>
       </div>
     </div>
   );
