@@ -3,19 +3,11 @@
   margin: 0px;
   padding: 0px;
   font-family: "Geomini", sans-serif;
-  color: white;
 }
 
 body{
   width: 100vw;
   height: 100vh;
-  background-color: rgb(2, 1, 14);
-}
-
-h1{
-  font-size: 200px;
-}
-
-h3{
-  font-size: 30px;
+  background: #f7f8fa;
+  color: #202124;
 }
