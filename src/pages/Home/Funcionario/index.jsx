@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react' 
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import api from '../../services/api'
+import api from '../../../services/api'
 import './style.css'
 
 export default function Home() {
@@ -34,13 +34,10 @@ export default function Home() {
       try {
         const decoded = jwtDecode(token);
 
-        // 1. LÓGICA DO NOME: Remove espaços em branco nas pontas e separa pelas lacunas.
-        // Em seguida, pega apenas os dois primeiros pedaços (primeiro e segundo nome).
         const nomeCompleto = decoded.nome ? String(decoded.nome).trim() : "";
-        const partesNome = nomeCompleto.split(/\s+/); // Divide por qualquer quantidade de espaços
-        const nomeExibicao = partesNome.slice(0, 2).join(" "); // Pega do índice 0 ao 1 e junta com um espaço
+        const partesNome = nomeCompleto.split(/\s+/);
+        const nomeExibicao = partesNome.slice(0, 2).join(" ");
 
-        // 2. LÓGICA DO CARGO: Remove espaços e converte para MAIÚSCULA antes de comparar
         const cargoCru = decoded.cargo ? String(decoded.cargo).trim().toUpperCase() : "";
         let cargoExibicao = "";
 
@@ -49,7 +46,7 @@ export default function Home() {
         } else if (cargoCru === "G") {
           cargoExibicao = "Gestor";
         } else {
-          cargoExibicao = decoded.cargo || ""; // Caso venha outra coisa, mantém o original
+          cargoExibicao = decoded.cargo || "";
         }
 
         setUsuario({
@@ -57,6 +54,10 @@ export default function Home() {
           cargo: cargoExibicao,
           foto: decoded.foto
         });
+
+        if (cargoCru == "G"){
+          navigate("/home/gestor");
+        }
 
         getKanban();
         getCard();
@@ -111,19 +112,19 @@ export default function Home() {
               <i className="fa-solid fa-house"></i>
             </button>
 
-            <button onClick={() => navigate("/Calendar")}>
+            <button onClick={() => navigate("/calendar/funcionario")}>
               <i className="fa-solid fa-calendar"></i>
             </button>
 
-            <button onClick={() => navigate("/Chat")}>
+            <button onClick={() => navigate("/chat/funcionario")}>
               <i className="fa-solid fa-comment-dots"></i>
             </button>
 
-            <button onClick={() => navigate("/Task")}>
+            <button onClick={() => navigate("/task")}>
               {dia}
             </button>
 
-            <button onClick={() => navigate("/Ia")}>
+            <button onClick={() => navigate("/ia/funcionario")}>
               <i className="fa-solid fa-dove"></i>
             </button>
           </div>
@@ -154,16 +155,32 @@ export default function Home() {
                 <h3>{kan.name}</h3>
               </div>
 
-              <div className="cards">
-                {card.map((obj) =>
-                  obj.kanban_id === kan.id ? (
-                    <div key={obj.id} className="task-card">
-                      <h4>{obj.title}</h4>
-                      <p>{obj.description}</p>
-                    </div>
-                  ) : null
-                )}
+        <div className="cards">
+          {card.map((obj) =>
+            obj.kanban_id === kan.id ? (
+              <div key={obj.id} className="task-card">
+                {/* Topo do card: Título e Descrição logo abaixo */}
+                <div className="task-card-header">
+                  <h4>{obj.title}</h4>
+                  <p className="task-card-description">{obj.description}</p>
+                </div>
+
+                {/* Rodapé do card: Barra de Progresso e Porcentagem na parte de baixo */}
+                <div className="task-card-progress-container">
+                  <div className="task-card-progress-bar">
+                    <div 
+                      className="task-card-progress-fill" 
+                      style={{ width: `${obj.progress || 0}%` }}
+                    ></div>
+                  </div>
+                  <span className="task-card-progress-text">
+                    {obj.progress || 0}%
+                  </span>
+                </div>
               </div>
+            ) : null
+          )}
+        </div>
             </div>
           ))}
         </div>

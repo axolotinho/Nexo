@@ -10,7 +10,7 @@ export default function Welcome() {
     const token = localStorage.getItem("token");
     
     if (token) {
-      navigate("/home");
+      navigate("/home/funcionario");
     }
   }, []);
   return (

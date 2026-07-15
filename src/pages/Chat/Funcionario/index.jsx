@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react' 
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import img1 from '../../assets/img1.jpg'
-import img2 from '../../assets/img2.jpg'
-import api from '../../services/api' // Caso use no futuro
+import img1 from '../../../assets/img1.jpg'
+import img2 from '../../../assets/img2.jpg'
+import api from '../../../services/api'
 import './style.css'
 
 export default function Home() {
@@ -13,13 +13,12 @@ export default function Home() {
   const [usuario, setUsuario] = useState(null);
   const navigate = useNavigate();
 
-  // 1. Inicializa o estado buscando do localStorage (ou usa o padrão se não existir nada salvo)
   const [messages, setMessages] = useState(() => {
     const savedMessages = localStorage.getItem("chat_messages");
     if (savedMessages) {
       return JSON.parse(savedMessages);
     }
-    // Mensagens padrão de mentirinha caso o localStorage esteja vazio
+
     return {
       1: [ // ID da Amanda
         { id: 101, sender: 'them', text: 'Oi! Tudo bem?' },
@@ -55,13 +54,11 @@ export default function Home() {
     try {
       const decoded = jwtDecode(token);
 
-      // 1. LÓGICA DO NOME: Remove espaços em branco nas pontas e separa pelas lacunas.
-      // Em seguida, pega apenas os dois primeiros pedaços (primeiro e segundo nome).
       const nomeCompleto = decoded.nome ? String(decoded.nome).trim() : "";
-      const partesNome = nomeCompleto.split(/\s+/); // Divide por qualquer quantidade de espaços
-      const nomeExibicao = partesNome.slice(0, 2).join(" "); // Pega do índice 0 ao 1 e junta com um espaço
+      const partesNome = nomeCompleto.split(/\s+/);
+      const nomeExibicao = partesNome.slice(0, 2).join(" ");
 
-      // 2. LÓGICA DO CARGO: Remove espaços e converte para MAIÚSCULA antes de comparar
+
       const cargoCru = decoded.cargo ? String(decoded.cargo).trim().toUpperCase() : "";
       let cargoExibicao = "";
 
@@ -70,7 +67,7 @@ export default function Home() {
       } else if (cargoCru === "G") {
         cargoExibicao = "Gestor";
       } else {
-        cargoExibicao = decoded.cargo || ""; // Caso venha outra coisa, mantém o original
+        cargoExibicao = decoded.cargo || "";
       }
 
       setUsuario({
@@ -78,6 +75,9 @@ export default function Home() {
         cargo: cargoExibicao,
         foto: decoded.foto
       });
+      if (cargoCru == "G"){
+        navigate("/home/gestor");
+      }
     } catch (error) {
       console.error("Erro ao decodificar o token:", error);
       navigate("/");
@@ -147,11 +147,11 @@ export default function Home() {
           </div>
 
           <div className="links">
-            <button onClick={() => navigate("/Home")}>
+            <button onClick={() => navigate("/home/funcionario")}>
               <i className="fa-solid fa-house"></i>
             </button>
 
-            <button onClick={() => navigate("/Calendar")}>
+            <button onClick={() => navigate("/calendar/funcionario")}>
               <i className="fa-solid fa-calendar"></i>
             </button>
 
@@ -159,11 +159,11 @@ export default function Home() {
               <i className="fa-solid fa-comment-dots"></i>
             </button>
 
-            <button onClick={() => navigate("/Task")}>
+            <button onClick={() => navigate("/task")}>
               {dia}
             </button>
 
-            <button onClick={() => navigate("/Ia")}>
+            <button onClick={() => navigate("/ia/funcionario")}>
               <i className="fa-solid fa-dove"></i>
             </button>
           </div>

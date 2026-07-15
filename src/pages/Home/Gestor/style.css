@@ -1,0 +1,307 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#0d3b66;
+    font-family:'Baloo 2',sans-serif;
+    overflow-x:hidden;
+}
+.header-home{
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+}
+
+.header-home img{
+    width:120px;
+}
+
+
+/* ================= TOPO ================= */
+
+.topo{
+    width:100%;
+    display:flex;
+    justify-content:center;
+}
+
+.barra{
+    width:100%;
+    height:90px;
+
+    background:#ffffff;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 40px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.18);
+}
+
+/* titulo */
+
+.header h2{
+    color:#0d3b66;
+    font-size:3rem;
+    font-weight:800;
+    letter-spacing:2px;
+}
+
+.header h2 span{
+    transition:.25s;
+}
+
+.header h2 span:hover{
+    color:#2892d7;
+    transform:translateY(-8px);
+}
+
+/* links */
+
+.links{
+    display:flex;
+    gap:15px;
+}
+
+.links button{
+    width:55px;
+    height:55px;
+
+    border:none;
+    border-radius:50%;
+
+    background:#2892d7;
+    color:white;
+
+    font-size:20px;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.links button:hover{
+    transform:translateY(-4px);
+}
+
+.links .active{
+    background:#0d3b66;
+}
+
+/* ================= SUBTITULO ================= */
+
+.subtitulo{
+    margin-top:25px;
+
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+
+    color:rgb(212, 208, 208);
+
+    font-size:1.5rem;
+    font-weight:600;
+
+    letter-spacing:1px;
+}
+
+.subtitulo span{
+    transition:.25s;
+}
+
+.subtitulo span:hover{
+    color:#2892d7;
+    transform:translateY(-5px);
+}
+
+/* ================= KANBAN ================= */
+
+.layout1{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    margin-top:40px;
+    padding-bottom:40px;
+}
+
+.kanban{
+    width:95%;
+
+    display:flex;
+    gap:25px;
+
+    align-items:flex-start;
+}
+
+/* colunas */
+
+.kanban-column{
+    flex:1;
+
+    background:white;
+
+    border-radius:18px;
+
+    min-height:600px;
+
+    overflow:hidden;
+
+    box-shadow:0 8px 18px rgba(0,0,0,.18);
+}
+
+.column-title{
+    padding:18px;
+    color:white;
+    text-align:center;
+}
+
+.column-title h3{
+    font-size:1.4rem;
+}
+
+/* cards */
+
+.cards{
+    padding:15px;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:15px;
+}
+
+/* Container que abriga as setas e a barra de progresso horizontalmente */
+.task-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+/* Botões de seta para mudar de coluna */
+.btn-move {
+    background: transparent;
+    border: none;
+    color: #0d3b66;
+    font-size: 0.95rem;
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.btn-move:hover {
+    background: rgba(13, 59, 102, 0.1); /* Efeito de hover suave usando a cor azul */
+    transform: scale(1.1);
+}
+
+.btn-move:active {
+    transform: scale(0.9);
+}
+
+/* Espaçador invisível para quando um botão sumir (manter o layout centralizado) */
+.btn-spacer {
+    width: 28px;
+}
+
+/* Progresso na base */
+.task-card-progress-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1; /* Faz a barra ocupar todo o espaço restante do centro */
+}
+
+.task-card-progress-bar {
+    flex: 1;
+    height: 8px;
+    background-color: #e0e6ed;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.task-card-progress-fill {
+    height: 100%;
+    background-color: #0d3b66;
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
+
+.task-card-progress-text {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #0d3b66;
+    white-space: nowrap;
+}
+
+/* ================= ÁREA DA CONTA (CANTO ESQUERDO) ================= */
+
+.account {
+    position: absolute;
+    left: 40px; /* Alinha perfeitamente à esquerda */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Foto em formato de círculo */
+.account img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #2892d7; /* Borda azul para combinar com o design */
+}
+
+/* Nome com letras pretas */
+.account h3 {
+    color: #000000;
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+}
+
+.account h3 span {
+    display: inline-block;
+    transition: .2s;
+}
+
+/* Efeito de balanço ao passar o mouse nas letras do nome */
+.account h3 span:hover {
+    color: #2892d7;
+    transform: translateY(-3px);
+}
+
+/* Cargo com letras cinzas */
+.account p {
+    color: #7f8c8d; /* Cinza elegante */
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin: 0;
+    margin-left: 5px; /* Sutil espaçamento entre o nome e o cargo */
+    display: flex;
+}
+
+.account p span {
+    display: inline-block;
+    transition: .2s;
+}
+
+.account p span:hover {
+    color: #bdc3c7;
+    transform: translateY(-2px);
+}

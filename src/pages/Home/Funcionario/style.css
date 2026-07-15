@@ -188,32 +188,70 @@ body{
     gap:15px;
 }
 
-.task-card{
-    background:#f4f8fb;
-
-    border-radius:15px;
-
-    padding:15px;
-
-    box-shadow:0 5px 10px rgba(0,0,0,.08);
-
-    transition:.25s;
+.task-card {
+    background: #f4f8fb;
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 5px 10px rgba(0,0,0,.08);
+    transition: .25s;
+    
+    /* Novas propriedades para organizar o topo e a base */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 120px; /* Garante um tamanho mínimo bonito para o card */
 }
 
-.task-card:hover{
-    transform:translateY(-4px);
+.task-card:hover {
+    transform: translateY(-4px);
 }
 
-.task-card h4{
-    color:#0d3b66;
-    margin-bottom:8px;
+/* Mantém seu estilo do título */
+.task-card h4 {
+    color: #0d3b66;
+    margin: 0 0 4px 0; /* Ajustado a margem para colar a descrição */
 }
 
-.task-card p{
-    color:#555;
-    font-size:.95rem;
+/* Mantém seu estilo do parágrafo, coladinho no título */
+.task-card p {
+    color: #555;
+    font-size: .95rem;
+    margin: 0;
 }
 
+/* --- Novas classes para a barra de progresso na parte inferior --- */
+
+.task-card-progress-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px; /* Empurra um pouco para longe do texto */
+}
+
+/* A barra cinza de fundo */
+.task-card-progress-bar {
+    flex: 1;
+    height: 8px;
+    background-color: #e0e6ed;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* O preenchimento dinâmico usando o azul do seu título para combinar com o layout */
+.task-card-progress-fill {
+    height: 100%;
+    background-color: #0d3b66; 
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
+
+/* Texto da porcentagem */
+.task-card-progress-text {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #0d3b66;
+    white-space: nowrap;
+}
 /* ================= ÁREA DA CONTA (CANTO ESQUERDO) ================= */
 
 .account {

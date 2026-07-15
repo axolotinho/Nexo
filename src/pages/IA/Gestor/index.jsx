@@ -48,6 +48,9 @@ export default function Ia() {
         cargo: cargoExibicao,
         foto: decoded.foto
       });
+      if (cargoCru == "G"){
+        navigate("/home/gestor");
+      }
     } catch (error) {
       console.error("Erro ao decodificar o token:", error);
       navigate("/");
@@ -146,20 +149,24 @@ export default function Ia() {
           </div>
 
           <div className="links">
-            <button onClick={() => navigate("/Home")}>
+            <button onClick={() => navigate("/home/gestor")}>
               <i className="fa-solid fa-house"></i>
             </button>
 
-            <button onClick={() => navigate("/Calendar")}>
+            <button onClick={() => navigate("/calendar/gestor")}>
               <i className="fa-solid fa-calendar"></i>
             </button>
 
-            <button onClick={() => navigate("/Chat")}>
+            <button onClick={() => navigate("/monitoring")}>
+              <i class="fa-solid fa-eye"></i>
+            </button>
+
+            <button onClick={() => navigate("/chat/gestor")}>
               <i className="fa-solid fa-comment-dots"></i>
             </button>
 
-            <button onClick={() => navigate("/Task")}>
-              {dia}
+            <button onClick={() => navigate("/create")}>
+              <i class="fa-solid fa-plus"></i>
             </button>
 
             <button className="active">

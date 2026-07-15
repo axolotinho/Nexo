@@ -24,15 +24,20 @@ export default function Task() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    // Resgata o ID do usuário logado guardado no localStorage (converta para número se necessário)
-    const loggedUserId = localStorage.getItem("userId"); 
     
     if (!token) {
       navigate("/");
       return;
     }
-     try {
+
+    try {
       const decoded = jwtDecode(token);
+      
+      // Captura o ID do usuário diretamente do token JWT decodificado
+      // Normalmente o jwt-decode coloca a identidade no campo 'sub'
+      const idDoUsuario = decoded.sub || decoded.identity; 
+      setUserId(idDoUsuario ? Number(idDoUsuario) : null);
+
       const nomeCompleto = decoded.nome ? String(decoded.nome).trim() : "";
       const partesNome = nomeCompleto.split(/\s+/); 
       const nomeExibicao = partesNome.slice(0, 2).join(" "); 
@@ -53,18 +58,22 @@ export default function Task() {
         cargo: cargoExibicao,
         foto: decoded.foto
       });
+
+      if (cargoCru === "G"){
+        navigate("/home/gestor");
+      }
     } catch (error) {
       console.error("Erro ao decodificar o token:", error);
       navigate("/");
     }
 
-    setUserId(loggedUserId ? Number(loggedUserId) : null);
     getCard();
   }, []);
 
-  // FILTRAGEM: Mostra apenas os cards onde o ID do usuário logado está na lista de responsáveis
+
+  // Filtra comparando os IDs convertidos para String (método mais seguro)
   const minhasTarefas = cards.filter(card => 
-    card.responsaveis?.some(responsavel => responsavel.id === userId)
+    card.responsaveis?.some(responsavel => String(responsavel.id) === String(userId))
   );
 
   return (
@@ -104,15 +113,15 @@ export default function Task() {
           </div>
 
           <div className="links">
-            <button onClick={() => navigate("/Home")}>
+            <button onClick={() => navigate("/home/funcionario")}>
               <i className="fa-solid fa-house"></i>
             </button>
 
-            <button onClick={() => navigate("/Calendar")}>
+            <button onClick={() => navigate("/calendar/funcionario")}>
               <i className="fa-solid fa-calendar"></i>
             </button>
 
-            <button onClick={() => navigate("/Chat")}>
+            <button onClick={() => navigate("/chat/funcionario")}>
               <i className="fa-solid fa-comment-dots"></i>
             </button>
 
@@ -120,7 +129,7 @@ export default function Task() {
               {dia}
             </button>
 
-            <button onClick={() => navigate("/Ia")}>
+            <button onClick={() => navigate("/ia/funcionario")}>
               <i className="fa-solid fa-dove"></i>
             </button>
           </div>

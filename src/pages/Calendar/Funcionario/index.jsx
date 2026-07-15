@@ -1,7 +1,7 @@
 import { useState, useEffect} from 'react' 
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import api from '../../services/api'
+import api from '../../../services/api'
 import './style.css'
 
 export default function Calendar() {
@@ -58,12 +58,13 @@ export default function Calendar() {
         cargo: cargoExibicao,
         foto: decoded.foto
       });
-      
+      if (cargoCru == "G"){
+        navigate("/home/gestor");
+      }
     } catch (error) {
       console.error("Erro ao decodificar o token:", error);
       navigate("/");
     }
-
     getCard();
   }, []);
 
@@ -109,7 +110,7 @@ export default function Calendar() {
 
           <div className="links">
 
-            <button onClick={() => navigate("/home")}>
+            <button onClick={() => navigate("/home/funcionario")}>
               <i className="fa-solid fa-house"></i>
             </button>
 
@@ -117,15 +118,15 @@ export default function Calendar() {
               <i className="fa-solid fa-calendar"></i>
             </button>
 
-            <button onClick={() => navigate("/Chat")}>
+            <button onClick={() => navigate("/chat/funcionario")}>
               <i className="fa-solid fa-comment-dots"></i>
             </button>
 
-            <button onClick={() => navigate("/Task")}>
+            <button onClick={() => navigate("/task")}>
               {dia}
             </button>
 
-            <button onClick={() => navigate("/Ia")}>
+            <button onClick={() => navigate("/ia/funcionario")}>
               <i className="fa-solid fa-dove"></i>
             </button>
 

@@ -1,0 +1,160 @@
+/* ==========================================================================
+   ESTILOS PARA A TELA DE CRIAÇÃO (LAYOUT EM DUAS COLUNAS)
+   ========================================================================== */
+
+/* Divide o espaço principal em 2 colunas */
+.layout5 {
+  width: 100%;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px 60px;
+  display: grid;
+  grid-template-columns: 1fr 2fr; /* Kanban ocupa 1 parte, Cartão ocupa 2 partes */
+  gap: 35px;
+  align-items: start;
+}
+
+/* Container Base dos Formulários de Criação */
+.container-create-kanban,
+.container-create-card {
+  background-color: #ffffff;
+  border-radius: 24px;
+  padding: 30px 28px;
+  box-shadow: 0 10px 0 rgba(0, 0, 0, 0.15);
+  transition: transform .25s ease;
+}
+
+.container-create-kanban:hover,
+.container-create-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Títulos das Seções */
+.title-section {
+  color: #0d3b66;
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  border-bottom: 3px solid #2892d7;
+  padding-bottom: 8px;
+}
+
+/* Estrutura do Formulário */
+.form-create {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Grupos de Input */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.input-group label {
+  color: #0d3b66;
+  font-weight: 700;
+  font-size: .95rem;
+  margin: 0 0 6px 0; /* Remove a margem superior padrão */
+}
+
+/* Estilização Geral para Inputs, Textareas e Selects */
+.form-create input,
+.form-create textarea,
+.form-create select {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 14px;
+  border: 2px solid #e4edf5;
+  background: #f7fafc;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: .95rem;
+  color: #0d3b66;
+  outline: none;
+  transition: .2s;
+}
+
+.form-create input:focus,
+.form-create textarea:focus,
+.form-create select:focus {
+  border-color: #2892d7;
+  background: white;
+}
+
+/* Textarea Customizado */
+.form-create textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Seletor de Cores Redondinho */
+.form-create input[type="color"] {
+  height: 50px;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 14px;
+}
+
+/* Inputs de Arquivo */
+.form-create input[type="file"] {
+  padding: 8px 12px;
+  background: #f4f8fb;
+  border: 2px dashed #2892d7;
+  cursor: pointer;
+}
+
+/* Alinhamentos em Grid Internos para Inputs Lado a Lado */
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.row-three {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 15px;
+}
+
+/* Botão de Envio Estilizado */
+.btn-submit {
+  width: 100%;
+  margin-top: 15px;
+  padding: 14px;
+  border: none;
+  border-radius: 50px;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+  background: #2892d7;
+  box-shadow: 0 6px 0 #1c6ba3;
+  transition: .2s;
+}
+
+.btn-submit:hover {
+  transform: translateY(-3px);
+  background: #1c6ba3;
+}
+
+.container-create-kanban .btn-submit {
+  background: #0d3b66;
+  box-shadow: 0 6px 0 #072544;
+}
+
+.container-create-kanban .btn-submit:hover {
+  background: #072544;
+}
+
+/* ==========================================================================
+   RESPONSIVIDADE
+   ========================================================================== */
+@media (max-width: 900px) {
+  .layout1 {
+    grid-template-columns: 1fr; /* Vira uma única coluna em telas menores */
+    gap: 25px;
+  }
+}
