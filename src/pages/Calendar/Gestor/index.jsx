@@ -58,9 +58,6 @@ export default function Calendar() {
         cargo: cargoExibicao,
         foto: decoded.foto
       });
-      if (cargoCru == "G"){
-        navigate("/home/gestor");
-      }
     } catch (error) {
       console.error("Erro ao decodificar o token:", error);
       navigate("/");
@@ -146,32 +143,33 @@ export default function Calendar() {
           </span>
         ))}
       </div>
-      <div className="calendar">
+<div className="calendar">
         <h3>{mes} de {hoje.getFullYear()}</h3>
+        <div className="calendar-wrapper">
+          <div className="calendar-grid">
+            {dias.map((dia) => (
+              <div key={dia} className="day">
 
-        <div className="calendar-grid">
-          {dias.map((dia) => (
-            <div key={dia} className="day">
+                <span className="day-number">{dia}</span>
 
-              <span className="day-number">{dia}</span>
+                {card
+                  .filter((ca) => {
+                    const data = new Date(ca.data_entrega);
 
-              {card
-                .filter((ca) => {
-                  const data = new Date(ca.data_entrega);
-
-                  return (
-                    data.getDate() === dia &&
-                    data.getMonth() === hoje.getMonth() &&
-                    data.getFullYear() === hoje.getFullYear()
-                  );
-                })
-                .map((ca) => (
-                  <div key={ca.id} className="card">
-                    <span>{ca.title}</span>
-                  </div>
-              ))}
-            </div>
-          ))}
+                    return (
+                      data.getDate() === dia &&
+                      data.getMonth() === hoje.getMonth() &&
+                      data.getFullYear() === hoje.getFullYear()
+                    );
+                  })
+                  .map((ca) => (
+                    <div key={ca.id} className="card">
+                      <span>{ca.title}</span>
+                    </div>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

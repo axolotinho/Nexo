@@ -72,9 +72,31 @@ export default function Task() {
 
 
   // Filtra comparando os IDs convertidos para String (método mais seguro)
-  const minhasTarefas = cards.filter(card => 
-    card.responsaveis?.some(responsavel => String(responsavel.id) === String(userId))
-  );
+  // Filtra apenas as tarefas do usuário que devem ser entregues hoje
+  const minhasTarefas = cards.filter(card => {
+    // 1. Verifica se o usuário logado é um dos responsáveis
+    const ehResponsavel = card.responsaveis?.some(
+      responsavel => String(responsavel.id) === String(userId)
+    );
+
+    if (!ehResponsavel) return false;
+
+    // 2. Verifica se o card tem prazo definido
+    if (!card.due_date) return false;
+
+    // Extrai apenas a parte da data "AAAA-MM-DD" para ignorar horas/fuso horário
+    const dataCardStr = card.due_date.split("T")[0];
+
+    // Obtém a data de hoje formatada em "AAAA-MM-DD" no fuso local
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+    const diaCorrente = String(hoje.getDate()).padStart(2, '0');
+    const hojeStr = `${ano}-${mes}-${diaCorrente}`;
+
+    // Retorna apenas se a data do card coincidir exatamente com o dia de hoje
+    return dataCardStr === hojeStr;
+  });
 
   return (
     <div>

@@ -9,6 +9,7 @@ export default function Ia() {
   const dia = new Date().getDate();
   const navigate = useNavigate();
   const [usuario, setUsuario] = useState(null);
+  const [aba, setAba] = useState("chat");
   // Estados da IA de Mentirinha
   const [inputMessage, setInputMessage] = useState("")
   const [chatHistory, setChatHistory] = useState([
@@ -172,19 +173,29 @@ export default function Ia() {
         </div>
       </div>
 
-      <div className="subtitulo">
-        {description.split("").map((letter, index) => (
-          <span key={index}>
-            {letter === " " ? "\u00A0" : letter}
-          </span>
-        ))}
+      <div className="ia-tabs">
+          <button
+              className={aba === "chat" ? "active" : ""}
+              onClick={() => setAba("chat")}
+          >
+              <i className="fa-solid fa-dove"></i>
+              Assistente
+          </button>
+
+          <button
+              className={aba === "dashboard" ? "active" : ""}
+              onClick={() => setAba("dashboard")}
+          >
+              <i className="fa-solid fa-chart-line"></i>
+              Análises
+          </button>
       </div>
 
       {/* Grid Principal da IA */}
       <div className="layout-ia">
         
         {/* Painel Esquerdo: Chat com a IA */}
-        <div className="ia-chat-box">
+        <div className={`ia-chat-box ${aba !== "chat" ? "mobile-hidden" : ""}`}>
           <div className="ia-chat-header">
             <i className="fa-solid fa-dove"></i> <span>Dovely - Assistente Ativo</span>
           </div>
@@ -213,7 +224,7 @@ export default function Ia() {
         </div>
 
         {/* Painel Direito: Dashboard de Saúde/Trabalho */}
-        <div className="ia-dashboard">
+        <div className={`ia-dashboard ${aba !== "dashboard" ? "mobile-hidden" : ""}`}>
           
           {/* Card 1: Horas Trabalhadas Diárias (Gráfico Visual) */}
           <div className="dash-card">

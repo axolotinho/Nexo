@@ -1,201 +1,333 @@
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap');
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
-    background:#0d3b66;
-    font-family:'Baloo 2',sans-serif;
-    overflow-x:hidden;
+body {
+    background: #0d3b66;
+    font-family: 'Baloo 2', sans-serif;
+    overflow-x: hidden;
 }
 
 /* ================= TOPO / BARRA CENTRADA ================= */
-
-.topo{
-    width:100%;
-    display:flex;
-    justify-content:center;
+.topo {
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
-.barra{
-    width:100%;
-    height:90px;
-    background:#ffffff;
-
-    display:flex;
-    align-items:center;
-    justify-content:flex-end; /* Alinha os botões/links à direita */
-    
-    padding:0 40px;
-    box-shadow:0 4px 12px rgba(0,0,0,.18);
-    position: relative; /* Permite o alinhamento absoluto do título */
+.barra {
+    width: 100%;
+    height: 90px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Mudado para space-between para acomodar a account à esquerda e links à direita */
+    padding: 0 40px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.18);
+    position: relative; 
 }
 
-.header-home{
+.header-home {
     position: absolute;
     left: 50%;
-    transform: translateX(-50%); /* Centraliza perfeitamente no meio da barra */
-    display:flex;
-    align-items:center;
+    transform: translateX(-50%); /* Centraliza perfeitamente no meio da barra em telas grandes */
+    display: flex;
+    align-items: center;
 }
 
-.header-home h2{
-    color:#0d3b66;
-    font-size:3rem;
-    font-weight:800;
-    letter-spacing:2px;    
+.header-home h2 {
+    color: #0d3b66;
+    font-size: 2.4rem; /* Ajustado de 3rem para alinhar com o padrão do Kanban */
+    font-weight: 800;
+    letter-spacing: 2px;    
 }
 
-.header-home h2 span{
-    display:inline-block;
-    transition:.25s;
+.header-home h2 span {
+    display: inline-block;
+    transition: .25s;
 }
 
-.header-home h2 span:hover{
-    color:#2892d7;
-    transform:translateY(-6px);
+.header-home h2 span:hover {
+    color: #2892d7;
+    transform: translateY(-6px);
+}
+
+/* ================= ÁREA DA CONTA (ALINHADO COM KANBAN) ================= */
+.account {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.account img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #2892d7;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    flex-shrink: 0;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.account h3 {
+    color: #0d3b66;
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    line-height: 1.2;
+}
+
+.account h3 span {
+    display: inline-block;
+    transition: .2s;
+}
+
+.account h3 span:hover {
+    color: #2892d7;
+    transform: translateY(-3px);
+}
+
+.account p {
+    color: #7f8c8d;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    line-height: 1.2;
+}
+
+.account p span {
+    display: inline-block;
+    transition: .2s;
+}
+
+.account p span:hover {
+    color: #2892d7;
+    transform: translateY(-2px);
 }
 
 /* ================= LINKS E BOTÕES ================= */
-
-.links{
-    display:flex;
-    gap:15px;
+.links {
+    display: flex;
+    gap: 15px;
 }
 
-.links button{
-    width:55px;
-    height:55px;
-
-    border:none;
-    border-radius:50%;
-
-    background:#2892d7;
-    color:white;
-
-    font-size:20px;
-
-    cursor:pointer;
-
-    transition:.25s;
+.links button {
+    width: 52px; /* Padronizado com o Kanban */
+    height: 52px;
+    border: none;
+    border-radius: 50%;
+    background: #2892d7;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all .25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 0 #1c6ba3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.links button:hover{
-    transform:translateY(-4px);
+.links button:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 0 #1c6ba3;
 }
 
-.links .active{
-    background:#0d3b66;
+.links button:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #1c6ba3;
 }
 
-/* ================= SUBTITULO E SEÇÕES ADICIONAIS ================= */
-
-.header h2{
-    color:#0d3b66;
-    font-size:3rem;
-    font-weight:800;
-    letter-spacing:2px;
+.links .active {
+    background: #0d3b66;
+    box-shadow: 0 4px 0 #072544;
 }
 
-.header h2 span{
-    transition:.25s;
+.links .active:hover {
+    box-shadow: 0 6px 0 #072544;
 }
 
-.header h2 span:hover{
-    color:#2892d7;
-    transform:translateY(-8px);
+/* Estilo do botão do dia atual */
+.calendar-day-btn {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 800;
+    font-size: 1.25rem;
+    line-height: 1;
 }
 
+/* ================= SUBTITULO ================= */
 .subtitulo {
-    text-align: center;
-    color: #fff;
-    font-size: 1.2rem;
-    margin-top: 15px;
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    color: rgb(212, 208, 208);
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: 1px;
 }
 
+.subtitulo span {
+    transition: .25s;
+}
+
+.subtitulo span:hover {
+    color: #2892d7;
+    transform: translateY(-5px);
+}
+
+/* ================= CALENDÁRIO ================= */
 /* ================= CALENDÁRIO ================= */
 
 .calendar{
     width:92%;
     max-width:1200px;
     margin:30px auto;
+}
 
+.calendar-wrapper{
     background:#fff;
     border-radius:18px;
-    overflow:hidden;
-
+    overflow-x:auto;
+    overflow-y:hidden;
     box-shadow:0 8px 20px rgba(0,0,0,.18);
+    -webkit-overflow-scrolling:touch;
 }
 
 .calendar h3{
     background:#2892d7;
     color:#fff;
-
     text-align:center;
-
+    padding:16px;
     font-size:1.8rem;
     font-weight:800;
-
     text-transform:capitalize;
-
-    padding:16px;
     margin:0;
 }
 
 .calendar-grid{
     display:grid;
-    grid-template-columns:repeat(7,1fr);
-    gap:0;
+    grid-template-columns:repeat(7,160px);
+    min-width:1120px;
 }
 
-.day{
-    min-height:95px;
-    padding:8px;
+/* ================= AJUSTE NA RESPONSIVIDADE ================= */
 
-    border-right:2px solid #c2d2df;
-    border-bottom:2px solid #c2d2df;
-
-    display:flex;
-    flex-direction:column;
-
-    transition:.2s ease;
-    cursor:pointer;
+@media (max-width: 768px) {
+    /* Removemos o overflow-x daqui, pois agora ele fica direto no .calendar 
+       para englobar a barra do título do mês junto com o grid! */
+    .calendar {
+        width: 95%; /* Aumenta um pouco a largura no mobile para aproveitar a tela */
+    }
 }
 
-.day:nth-child(7n){
-    border-right:none;
+.day {
+    min-height: 110px; /* Aumentado ligeiramente para caber melhor os cards */
+    padding: 8px;
+    border-right: 2px solid #c2d2df;
+    border-bottom: 2px solid #c2d2df;
+    display: flex;
+    flex-direction: column;
+    transition: .2s ease;
+    cursor: pointer;
 }
 
-.day-number{
-    font-size:.95rem;
-    font-weight:800;
-    color:#0d3b66;
-    margin-bottom:6px;
+.day:nth-child(7n) {
+    border-right: none;
 }
 
-.card{
-    background:#2892d7;
-    color:#fff;
-
-    border-radius:6px;
-
-    padding:5px 6px;
-
-    font-size:.75rem;
-
-    margin-bottom:5px;
-
-    overflow:hidden;
-    white-space:nowrap;
-    text-overflow:ellipsis;
+.day-number {
+    font-size: .95rem;
+    font-weight: 800;
+    color: #0d3b66;
+    margin-bottom: 6px;
 }
 
-.day:hover{
-    background:#eef7fd;
-    transform:scale(1.03);
-    z-index:2;
-    box-shadow:0 6px 15px rgba(40,146,215,.25);
+.card {
+    background: #2892d7;
+    color: #fff;
+    border-radius: 6px;
+    padding: 5px 6px;
+    font-size: .75rem;
+    margin-bottom: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.day:hover {
+    background: #eef7fd;
+    transform: scale(1.03);
+    z-index: 2;
+    box-shadow: 0 6px 15px rgba(40,146,215,.25);
+}
+
+/* ================= RESPONSIVIDADE INTERATIVA (MOBILE & TABLET) ================= */
+
+@media (max-width: 768px) {
+    .barra {
+        flex-direction: column;
+        height: auto;
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .account {
+        width: 100%;
+        justify-content: center; /* Conta centralizada no meio no mobile */
+    }
+
+    /* O header-home some do fluxo por causa do !isMobile no JSX, mas caso falhe ele resguarda aqui */
+    .header-home {
+        position: relative;
+        left: 0;
+        transform: none;
+        width: 100%;
+        justify-content: center;
+        order: -1;
+    }
+
+    .links {
+        width: 100%;
+        justify-content: center; /* Botões centralizados no meio no mobile */
+        flex-wrap: wrap;
+    }
+
+    .subtitulo {
+        font-size: 1.1rem;
+        padding: 0 16px;
+        text-align: center;
+        margin-top: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Ajustes finos adicionais para telas menores */
+    .links button {
+        width: 44px;
+        height: 44px;
+        font-size: 16px;
+    }
+
+    .account h3 {
+        font-size: 1rem;
+    }
+    
+    .calendar h3 {
+        font-size: 1.4rem;
+        padding: 12px;
+    }
 }

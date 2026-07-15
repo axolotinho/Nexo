@@ -8,6 +8,8 @@
 
 body {
   background-color: #0d3b66;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 /* ===== Header ===== */
@@ -22,7 +24,7 @@ body {
   text-align: center;
   font-family: 'Baloo 2', sans-serif;
   overflow: hidden;
-  padding-top: 20px;
+  padding: 20px 16px 0;
 }
 
 .header::before,
@@ -111,6 +113,7 @@ body {
   color: #2892d7;
 }
 
+/* Animações das letras do subtítulo */
 .header h3 span:nth-child(1) { animation-delay: 0.5s; }
 .header h3 span:nth-child(2) { animation-delay: 0.53s; }
 .header h3 span:nth-child(3) { animation-delay: 0.56s; }
@@ -124,6 +127,9 @@ body {
 .header h3 span:nth-child(11) { animation-delay: 0.8s; }
 .header h3 span:nth-child(12) { animation-delay: 0.83s; }
 .header h3 span:nth-child(13) { animation-delay: 0.86s; }
+.header h3 span:nth-child(14) { animation-delay: 0.89s; }
+.header h3 span:nth-child(15) { animation-delay: 0.92s; }
+.header h3 span:nth-child(16) { animation-delay: 0.95s; }
 
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(15px); }
@@ -137,247 +143,335 @@ body {
 }
 
 /* ===== Cards de login/cadastro ===== */
-
 .login-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: flex-start;
-
   gap: 40px;
-
   padding: 20px 24px 60px;
-
   font-family: 'Baloo 2', sans-serif;
-
   animation: fadeInUp 0.6s ease forwards;
   animation-delay: 0.9s;
-
   opacity: 0;
 }
 
-
 .Gestor,
 .Funcionario {
-
   background-color: #ffffff;
-
   border-radius: 24px;
-
-  width: 360px;
-
+  width: 380px;
   text-align: left;
-
   padding: 0 28px 30px;
-
   overflow: hidden;
-
   box-shadow: 0 10px 0 rgba(0,0,0,0.15);
-
   transition: transform .25s ease;
 }
 
-
 .Funcionario {
-  width: 420px;
+  width: 440px; /* Um pouco mais espaçoso para conter o formulário maior */
+  max-width: 100%;
 }
-
 
 .Gestor:hover,
 .Funcionario:hover {
-
   transform: translateY(-6px);
-
 }
-
-
 
 /* topo dos cards */
-
 .top {
-
   margin: 0 -28px 24px;
-
   padding: 22px 28px 34px;
-
   border-radius: 0 0 60% 60% / 0 0 30px 30px;
-
-  text-align:center;
-
+  text-align: center;
 }
-
 
 .top.gestor {
-
-  background-color:#0d3b66;
-
+  background-color: #0d3b66;
 }
-
 
 .top.funcionario {
-
-  background-color:#2892d7;
-
+  background-color: #2892d7;
 }
-
 
 .top h2 {
-
-  color:white;
-
-  font-size:1.6rem;
-
-  font-weight:800;
-
+  color: white;
+  font-size: 1.6rem;
+  font-weight: 800;
 }
-
-
 
 /* labels */
-
 label {
-
-  display:block;
-
-  color:#0d3b66;
-
-  font-weight:700;
-
-  font-size:.9rem;
-
-  margin:12px 0 6px;
-
+  display: block;
+  color: #0d3b66;
+  font-weight: 700;
+  font-size: .95rem;
+  margin: 14px 0 6px;
 }
-
-
 
 /* inputs */
-
 input {
-
-  width:100%;
-
-  padding:12px 15px;
-
-  border-radius:14px;
-
-  border:2px solid #e4edf5;
-
-  background:#f7fafc;
-
-  font-family:'Baloo 2',sans-serif;
-
-  font-size:.95rem;
-
-  color:#0d3b66;
-
-  outline:none;
-
-  transition:.2s;
-
+  width: 100%;
+  padding: 13px 16px;
+  border-radius: 14px;
+  border: 2px solid #e4edf5;
+  background: #f7fafc;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1rem;
+  color: #0d3b66;
+  outline: none;
+  transition: .2s;
 }
-
 
 input:focus {
-
-  border-color:#2892d7;
-
-  background:white;
-
+  border-color: #2892d7;
+  background: white;
 }
 
-
-/* input de arquivo */
-
+/* input de arquivo e tipos específicos */
 input[type="file"] {
-
-  padding:9px;
-
-  cursor:pointer;
-
+  padding: 10px;
+  cursor: pointer;
+  background: #f0f7fc;
+  border: 2px dashed #2892d7;
 }
 
-
+/* Agrupamento elegante dos seletores de Horários */
+.time-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
 
 /* botões */
-
 .Gestor button,
 .Funcionario button {
-
-  width:100%;
-
-  margin-top:24px;
-
-  padding:13px;
-
-  border:none;
-
-  border-radius:50px;
-
-  font-family:'Baloo 2',sans-serif;
-
-  font-size:1rem;
-
-  font-weight:700;
-
-  color:white;
-
-  cursor:pointer;
-
-  transition:.2s;
-
+  width: 100%;
+  margin-top: 28px;
+  padding: 14px;
+  border: none;
+  border-radius: 50px;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+  transition: .2s;
 }
-
-
 
 .Gestor button {
-
-  background:#0d3b66;
-
-  box-shadow:0 6px 0 #072544;
-
+  background: #0d3b66;
+  box-shadow: 0 6px 0 #072544;
 }
-
 
 .Funcionario button {
-
-  background:#2892d7;
-
-  box-shadow:0 6px 0 #1c6ba3;
-
+  background: #2892d7;
+  box-shadow: 0 6px 0 #1c6ba3;
 }
-
-
 
 .Gestor button:hover,
 .Funcionario button:hover {
-
-  transform:translateY(-3px);
-
+  transform: translateY(-3px);
 }
 
-
-
-/* deixa o formulário de cadastro mais organizado */
-
-.Funcionario input[type="time"],
-.Funcionario input[type="number"] {
-
-  width:100%;
-
+.Gestor button:active,
+.Funcionario button:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #1c6ba3;
 }
 
+/* ===== Estilização do Link de Retorno ===== */
+.class-link {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
 
+.class-link a {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #2892d7;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  border: 2px dashed transparent;
+}
 
-/* responsivo */
+.class-link a:hover {
+  color: #0d3b66;
+  background-color: #f0f7fc;
+  border-color: #2892d7;
+}
 
-@media(max-width:800px){
+/* ===== Notificação de erro ===== */
+.fail {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ff4d4d;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 50px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 10;
+  font-family: 'Baloo 2', sans-serif;
+}
 
-  .Gestor,
-  .Funcionario{
+.fail-icon {
+  font-weight: 800;
+  background-color: white;
+  color: #ff4d4d;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
 
-    width:90%;
+/* ==========================================
+   MÍDIA QUERIES (Responsividade Mobile)
+   ========================================== */
 
+@media (max-width: 768px) {
+  .header h2 {
+    font-size: 3.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    min-height: 25vh;
   }
 
+  .header h2 {
+    font-size: 3.2rem;
+  }
+
+  .header h3 {
+    font-size: 1.05rem;
+  }
+
+  /* Círculos no mobile */
+  .header::before {
+    width: 50px;
+    height: 50px;
+    left: 4%;
+    top: 5%;
+  }
+
+  .header::after {
+    width: 30px;
+    height: 30px;
+    right: 4%;
+    bottom: 5%;
+  }
+
+  .login-container {
+    padding: 10px 16px 40px;
+  }
+
+  .Gestor,
+  .Funcionario {
+    width: 100%;
+    padding: 0 20px 24px;
+  }
+
+  .top {
+    margin: 0 -20px 20px;
+    padding: 18px 20px 24px;
+  }
+
+  /* Organiza os campos de hora no mobile de maneira confortável */
+  .time-group {
+    grid-template-columns: 1fr; /* Passa a ser empilhado para ter melhor área de toque */
+    gap: 0px;
+  }
+
+  /* Conforto geral para digitação */
+  input {
+    font-size: 1.05rem;
+    padding: 14px;
+  }
+
+  /* Conforto do Botão de Envio */
+  .Gestor button,
+  .Funcionario button {
+    padding: 16px;
+    font-size: 1.15rem;
+  }
+
+  /* Link de voltar transformado em um link estilo botão secundário mobile */
+  .class-link a {
+    font-size: 1rem;
+    padding: 10px 20px;
+    width: 100%;
+    text-align: center;
+    background-color: #f7fafc;
+    border: 2px solid #e4edf5;
+    border-radius: 50px;
+  }
+
+  .class-link a:hover {
+    background-color: #e4edf5;
+  }
+}
+
+/* ===== Estilização do Input de Arquivo (Foto) ===== */
+input[type="file"] {
+  padding: 8px;
+  background: #f7fafc;
+  border: 2px dashed #2892d7;
+  border-radius: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-family: 'Baloo 2', sans-serif;
+  color: #0d3b66;
+}
+
+/* O botão "Escolher arquivo" em si */
+input[type="file"]::file-selector-button {
+  background-color: #2892d7;
+  color: #ffffff;
+  border: none;
+  border-radius: 50px;
+  padding: 6px 16px;
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  margin-right: 12px;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 0 #1c6ba3;
+}
+
+/* Efeito Hover no botão do arquivo */
+input[type="file"]::file-selector-button:hover {
+  background-color: #0d3b66;
+  box-shadow: 0 3px 0 #072544;
+}
+
+/* Quando o usuário clica */
+input[type="file"]::file-selector-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #072544;
+}
+
+/* Ajuste de toque confortável no Mobile */
+@media (max-width: 480px) {
+  input[type="file"] {
+    padding: 10px;
+  }
+  
+  input[type="file"]::file-selector-button {
+    padding: 10px 20px;
+    font-size: 0.95rem; /* Letras confortáveis para o celular */
+  }
 }

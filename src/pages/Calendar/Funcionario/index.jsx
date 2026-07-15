@@ -11,6 +11,7 @@ export default function Calendar() {
   const dia = hoje.getDate();
   const [usuario, setUsuario] = useState(null);
   const mes = hoje.toLocaleString("pt-BR", {
+
     month: "long",
   });
   const diasNoMes = new Date(
@@ -146,30 +147,31 @@ export default function Calendar() {
       </div>
       <div className="calendar">
         <h3>{mes} de {hoje.getFullYear()}</h3>
+        <div className="calendar-wrapper">
+          <div className="calendar-grid">
+            {dias.map((dia) => (
+              <div key={dia} className="day">
 
-        <div className="calendar-grid">
-          {dias.map((dia) => (
-            <div key={dia} className="day">
+                <span className="day-number">{dia}</span>
 
-              <span className="day-number">{dia}</span>
+                {card
+                  .filter((ca) => {
+                    const data = new Date(ca.data_entrega);
 
-              {card
-                .filter((ca) => {
-                  const data = new Date(ca.data_entrega);
-
-                  return (
-                    data.getDate() === dia &&
-                    data.getMonth() === hoje.getMonth() &&
-                    data.getFullYear() === hoje.getFullYear()
-                  );
-                })
-                .map((ca) => (
-                  <div key={ca.id} className="card">
-                    <span>{ca.title}</span>
-                  </div>
-              ))}
-            </div>
-          ))}
+                    return (
+                      data.getDate() === dia &&
+                      data.getMonth() === hoje.getMonth() &&
+                      data.getFullYear() === hoje.getFullYear()
+                    );
+                  })
+                  .map((ca) => (
+                    <div key={ca.id} className="card">
+                      <span>{ca.title}</span>
+                    </div>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

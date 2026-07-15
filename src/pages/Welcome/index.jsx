@@ -6,13 +6,6 @@ export default function Welcome() {
   const subtitle = "Seja bem-vindo ao";
   const title = "Nexo";
   const navigate = useNavigate();
-  useEffect (() =>  {
-    const token = localStorage.getItem("token");
-    
-    if (token) {
-      navigate("/home/funcionario");
-    }
-  }, []);
   return (
     <div className="welcome">
       <h3>

@@ -153,8 +153,100 @@
    RESPONSIVIDADE
    ========================================================================== */
 @media (max-width: 900px) {
-  .layout1 {
+  .layout5 {
     grid-template-columns: 1fr; /* Vira uma única coluna em telas menores */
     gap: 25px;
   }
+}
+
+/* ==========================================================================
+   RESPONSIVIDADE
+   ========================================================================== */
+
+@media (max-width: 900px){
+
+    .layout5{
+        width:100%;
+        display:flex;
+        flex-direction:column;
+        gap:20px;
+        padding:0 12px 30px;
+        margin:20px auto;
+    }
+
+    .container-create-kanban,
+    .container-create-card{
+        width:100%;
+        padding:20px;
+        border-radius:18px;
+    }
+
+    .title-section{
+        font-size:1.5rem;
+        text-align:center;
+    }
+
+    .row,
+    .row-three{
+        display:flex;
+        flex-direction:column;
+        gap:12px;
+    }
+
+    .form-create{
+        gap:12px;
+    }
+
+    .form-create input,
+    .form-create textarea,
+    .form-create select{
+        font-size:.95rem;
+    }
+
+    .form-create textarea{
+        min-height:90px;
+    }
+
+    .btn-submit{
+        height:52px;
+        font-size:1rem;
+    }
+
+    .input-group label{
+        font-size:.9rem;
+    }
+
+    .form-create input[type="file"]{
+        font-size:.85rem;
+    }
+
+}
+
+@media (max-width:480px){
+
+    .layout5{
+        padding:0 8px 25px;
+    }
+
+    .container-create-kanban,
+    .container-create-card{
+        padding:16px;
+    }
+
+    .title-section{
+        font-size:1.3rem;
+    }
+
+    .form-create input,
+    .form-create textarea,
+    .form-create select{
+        padding:10px 12px;
+        font-size:.9rem;
+    }
+
+    .btn-submit{
+        height:48px;
+        font-size:.95rem;
+    }
+
 }

@@ -1,307 +1,506 @@
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap');
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-body{
-    background:#0d3b66;
-    font-family:'Baloo 2',sans-serif;
-    overflow-x:hidden;
-}
-.header-home{
-    display:flex;
-    align-items:center;
-    justify-content:flex-start;
+body {
+  background: #0d3b66;
+  font-family: 'Baloo 2', sans-serif;
+  overflow-x: hidden;
 }
 
-.header-home img{
-    width:120px;
+.header-home {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 
+.header-home h2 {
+  color: #0d3b66;
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.header-home h2 span {
+  display: inline-block;
+  transition: .25s;
+}
+
+.header-home h2 span:hover {
+  color: #2892d7;
+  transform: translateY(-6px);
+}
 
 /* ================= TOPO ================= */
-
-.topo{
-    width:100%;
-    display:flex;
-    justify-content:center;
+.topo {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
-.barra{
-    width:100%;
-    height:90px;
-
-    background:#ffffff;
-
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-
-    padding:0 40px;
-
-    box-shadow:0 4px 12px rgba(0,0,0,.18);
+.barra {
+  width: 100%;
+  height: 90px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.18);
+  position: relative;
 }
 
-/* titulo */
-
-.header h2{
-    color:#0d3b66;
-    font-size:3rem;
-    font-weight:800;
-    letter-spacing:2px;
+/* Links & Botões de Navegação */
+.links {
+  display: flex;
+  gap: 15px;
 }
 
-.header h2 span{
-    transition:.25s;
+.links button {
+  width: 52px;
+  height: 52px;
+  border: none;
+  border-radius: 50%;
+  background: #2892d7;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all .25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 4px 0 #1c6ba3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.header h2 span:hover{
-    color:#2892d7;
-    transform:translateY(-8px);
+.links button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 0 #1c6ba3;
 }
 
-/* links */
-
-.links{
-    display:flex;
-    gap:15px;
+.links button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #1c6ba3;
 }
 
-.links button{
-    width:55px;
-    height:55px;
+.links .active {
+  background: #0d3b66;
+  box-shadow: 0 4px 0 #072544;
+}
+
+.links .active:hover {
+  box-shadow: 0 6px 0 #072544;
+}
+
+/* Estilo do botão de Calendário (Dia) */
+.links .calendar-day-btn {
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 800;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+
+/* ================= SUBTITULO ================= */
+.subtitulo {
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  color: rgb(212, 208, 208);
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.subtitulo span {
+  transition: .25s;
+}
+
+.subtitulo span:hover {
+  color: #2892d7;
+  transform: translateY(-5px);
+}
+
+/* ================= KANBAN LAYOUT ================= */
+.layout1 {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  /* Retiramos o padding lateral fixo para que o scroll encoste na borda da tela no mobile */
+  padding: 0 0 40px 0; 
+  overflow: hidden; 
+}
+
+/* Container do Kanban de ponta a ponta */
+.kanban {
+  width: 100%;
+  /* Removemos o max-width de 1600px para usar a largura inteira da tela */
+  max-width: 100%; 
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  
+  /* O 'safe center' garante que as colunas fiquem centralizadas se couberem na tela.
+    Se não couberem (houver mais colunas), ele se comporta como 'flex-start' 
+    para que o usuário consiga rolar para a direita sem cortar o conteúdo da esquerda.
+  */
+  justify-content: safe center; 
+  
+  overflow-x: auto; 
+  padding: 0 20px 20px 20px; /* O espaçamento interno agora fica aqui para proteger as bordas ao rolar */
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch; 
+}
+
+/* Fallback de suporte: Caso algum navegador antigo não suporte 'safe center' */
+@supports not (justify-content: safe center) {
+  .kanban {
+    /* Se o navegador não der suporte, centraliza via margens ou inicia na esquerda */
+    justify-content: flex-start;
+  }
+  /* Adiciona uma margem esquerda/direita automática na primeira e última coluna para tentar centralizar */
+  .kanban-column:first-child {
+    margin-left: auto;
+  }
+  .kanban-column:last-child {
+    margin-right: auto;
+  }
+}
+
+
+/* Oculta a barra de rolagem padrão em navegadores Webkit (Chrome/Safari) para um look mais limpo, se desejar */
+.kanban::-webkit-scrollbar {
+  height: 8px;
+}
+.kanban::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+.kanban::-webkit-scrollbar-thumb {
+  background: #2892d7;
+  border-radius: 10px;
+}
+
+.kanban-column {
+  flex: 0 0 360px;
+  background: white;
+  border-radius: 18px;
+  min-height: 600px;
+  height: 75vh;
+  overflow: hidden;
+  box-shadow: 0 8px 18px rgba(0,0,0,.18);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Estilo do título da coluna */
+.column-title {
+  padding: 15px;
+  text-align: center;
+  color: white;
+}
+
+.column-title h3 {
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+/* Cards das tarefas */
+.cards {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  overflow-y: auto; /* Rolagem vertical individual de cada coluna */
+  flex: 1; /* Ocupa o resto do espaço interno da coluna */
+}
+
+.task-card {
+  background: #f4f8fb;
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 5px 10px rgba(0,0,0,.08);
+  transition: all .25s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 130px;
+  border-left: 5px solid #2892d7;
+}
+
+.task-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+}
+
+.task-card h4 {
+  color: #0d3b66;
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+/* ================= CARDS & LIMITAÇÃO DE TEXTO ================= */
+.task-card-description {
+  color: #555;
+  font-size: .9rem;
+  line-height: 1.4;
+  margin-top: 4px;
+  display: -webkit-box;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
+
+/* Progresso dentro do Card */
+.task-card-progress-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.task-card-progress-bar {
+  flex: 1;
+  height: 8px;
+  background-color: #e0e6ed;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.task-card-progress-fill {
+  height: 100%;
+  background-color: #0d3b66; 
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+
+.task-card-progress-text {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #0d3b66;
+  white-space: nowrap;
+}
+
+/* ================= RESPONSIVIDADE (MOBILE & TABLET) ================= */
+
+@media (max-width: 1024px) {
+  .layout1 {
+    padding: 0 10px 20px;
+  }
+  
+  .kanban-column {
+    flex: 0 0 320px; /* Reduz ligeiramente a largura das colunas em telas médias */
+    min-height: 500px;
+    height: 70vh;
+  }
+}
+
+@media (max-width: 768px) {
+  .barra {
+    flex-direction: column;
+    height: auto;
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .account {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .header-home {
+    width: 100%;
+    justify-content: center;
+    order: -1;
+  }
+
+  .header-home h2 {
+    font-size: 1.8rem;
+  }
+
+  .links {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .subtitulo {
+    font-size: 1.1rem;
+    padding: 0 16px;
+    text-align: center;
+  }
+
+  .kanban-column {
+    flex: 0 0 290px;
+    height: 65vh;
+  }
+}
+
+/* Telas bem pequenas: some com subtítulo e cargo pra ganhar espaço */
+@media (max-width: 480px) {
+  .subtitulo {
+    display: none;
+  }
+
+  .account p {
+    display: none;
+  }
+
+  .account h3 {
+    font-size: 1rem;
+  }
+
+  .header-home h2 {
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+  }
+
+  .links button {
+    width: 44px;
+    height: 44px;
+    font-size: 16px;
+  }
+
+  .kanban-column {
+    flex: 0 0 85vw;
+    height: 60vh;
+  }
+}
+
+
+
+/* ================= ÁREA DA CONTA ================= */
+.account {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.account img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #2892d7;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.account h3 {
+  color: #0d3b66;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  line-height: 1.2;
+}
+
+.account h3 span {
+  display: inline-block;
+  transition: .2s;
+}
+
+.account h3 span:hover {
+  color: #2892d7;
+  transform: translateY(-3px);
+}
+
+.account p {
+  color: #7f8c8d;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  line-height: 1.2;
+}
+
+.account p span {
+  display: inline-block;
+  transition: .2s;
+}
+
+.account p span:hover {
+  color: #2892d7;
+  transform: translateY(-2px);
+}
+
+.btn-move{
+
+    width:34px;
+    height:34px;
 
     border:none;
     border-radius:50%;
 
     background:#2892d7;
-    color:white;
+    color:#fff;
 
-    font-size:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
     cursor:pointer;
 
     transition:.25s;
+
+    flex-shrink:0;
 }
 
-.links button:hover{
-    transform:translateY(-4px);
-}
+.btn-move:hover{
 
-.links .active{
     background:#0d3b66;
+
+    transform:translateY(-2px) scale(1.05);
+
+    box-shadow:0 4px 10px rgba(0,0,0,.2);
+
 }
 
-/* ================= SUBTITULO ================= */
+.btn-move:active{
 
-.subtitulo{
-    margin-top:25px;
+    transform:scale(.95);
+
+}
+
+.btn-spacer{
+
+    width:34px;
+    height:34px;
+
+}
+
+.task-card-footer{
 
     display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
 
-    color:rgb(212, 208, 208);
-
-    font-size:1.5rem;
-    font-weight:600;
-
-    letter-spacing:1px;
 }
 
-.subtitulo span{
-    transition:.25s;
-}
+.task-card-progress-container{
 
-.subtitulo span:hover{
-    color:#2892d7;
-    transform:translateY(-5px);
-}
-
-/* ================= KANBAN ================= */
-
-.layout1{
-    width:100%;
-    display:flex;
-    justify-content:center;
-    margin-top:40px;
-    padding-bottom:40px;
-}
-
-.kanban{
-    width:95%;
-
-    display:flex;
-    gap:25px;
-
-    align-items:flex-start;
-}
-
-/* colunas */
-
-.kanban-column{
     flex:1;
-
-    background:white;
-
-    border-radius:18px;
-
-    min-height:600px;
-
-    overflow:hidden;
-
-    box-shadow:0 8px 18px rgba(0,0,0,.18);
-}
-
-.column-title{
-    padding:18px;
-    color:white;
-    text-align:center;
-}
-
-.column-title h3{
-    font-size:1.4rem;
-}
-
-/* cards */
-
-.cards{
-    padding:15px;
-
     display:flex;
     flex-direction:column;
+    align-items:center;
 
-    gap:15px;
-}
-
-/* Container que abriga as setas e a barra de progresso horizontalmente */
-.task-card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    margin-top: 15px;
-}
-
-/* Botões de seta para mudar de coluna */
-.btn-move {
-    background: transparent;
-    border: none;
-    color: #0d3b66;
-    font-size: 0.95rem;
-    cursor: pointer;
-    padding: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: background 0.2s, transform 0.1s;
-}
-
-.btn-move:hover {
-    background: rgba(13, 59, 102, 0.1); /* Efeito de hover suave usando a cor azul */
-    transform: scale(1.1);
-}
-
-.btn-move:active {
-    transform: scale(0.9);
-}
-
-/* Espaçador invisível para quando um botão sumir (manter o layout centralizado) */
-.btn-spacer {
-    width: 28px;
-}
-
-/* Progresso na base */
-.task-card-progress-container {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex: 1; /* Faz a barra ocupar todo o espaço restante do centro */
-}
-
-.task-card-progress-bar {
-    flex: 1;
-    height: 8px;
-    background-color: #e0e6ed;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.task-card-progress-fill {
-    height: 100%;
-    background-color: #0d3b66;
-    border-radius: 10px;
-    transition: width 0.3s ease;
-}
-
-.task-card-progress-text {
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: #0d3b66;
-    white-space: nowrap;
-}
-
-/* ================= ÁREA DA CONTA (CANTO ESQUERDO) ================= */
-
-.account {
-    position: absolute;
-    left: 40px; /* Alinha perfeitamente à esquerda */
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-/* Foto em formato de círculo */
-.account img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #2892d7; /* Borda azul para combinar com o design */
-}
-
-/* Nome com letras pretas */
-.account h3 {
-    color: #000000;
-    font-family: 'Baloo 2', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin: 0;
-    display: flex;
-}
-
-.account h3 span {
-    display: inline-block;
-    transition: .2s;
-}
-
-/* Efeito de balanço ao passar o mouse nas letras do nome */
-.account h3 span:hover {
-    color: #2892d7;
-    transform: translateY(-3px);
-}
-
-/* Cargo com letras cinzas */
-.account p {
-    color: #7f8c8d; /* Cinza elegante */
-    font-family: 'Baloo 2', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin: 0;
-    margin-left: 5px; /* Sutil espaçamento entre o nome e o cargo */
-    display: flex;
-}
-
-.account p span {
-    display: inline-block;
-    transition: .2s;
-}
-
-.account p span:hover {
-    color: #bdc3c7;
-    transform: translateY(-2px);
 }

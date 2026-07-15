@@ -15,48 +15,52 @@ export default function Home() {
   const [usuario, setUsuario] = useState(null);
 
   async function getKanban(){
-    const kanbanFromApi = await api.get('/card') // Nota: mantive para manter a consistência, mas o endpoint do Kanban costuma ser '/kanban'
-    // Correção rápida se o endpoint correto do Kanban for /kanban:
-    const response = await api.get('/kanban')
-    setKanban(response.data);
+    try {
+      // Endpoint correto para buscar as colunas do Kanban
+      const response = await api.get('/kanban');
+      setKanban(response.data);
+    } catch (error) {
+      console.error("Erro ao buscar colunas do Kanban:", error);
+    }
   }
 
   async function getCard(){
-    const cardFromApi = await api.get('/card')
-    setCard(cardFromApi.data);
+    try {
+      const cardFromApi = await api.get('/card');
+      setCard(cardFromApi.data);
+    } catch (error) {
+      console.error("Erro ao buscar cards:", error);
+    }
   }
 
-  // Função para mover o card de coluna (para a esquerda ou para a direita)
+  // Função para mover o card de coluna
   async function moverCard(cardId, direcao) {
-    // Encontra o card atual na lista
     const cardAtual = card.find(c => c.id === cardId);
     if (!cardAtual) return;
 
-    // Encontra o índice da coluna atual no array do Kanban
     const indiceColunaAtual = kanban.findIndex(k => k.id === cardAtual.kanban_id);
     if (indiceColunaAtual === -1) return;
 
-    // Calcula o índice da nova coluna
     let novoIndice = indiceColunaAtual + direcao;
 
-    // Impede que passe dos limites do Kanban (primeira e última colunas)
+    // Impede que passe dos limites do Kanban
     if (novoIndice < 0 || novoIndice >= kanban.length) return;
 
     const novaColuna = kanban[novoIndice];
 
-    // Atualiza o estado local imediatamente para dar fluidez visual (Optimistic Update)
+    // 1. Atualização Otimista: muda o estado na tela primeiro para ficar instantâneo
     setCard(prevCards => 
       prevCards.map(c => c.id === cardId ? { ...c, kanban_id: novaColuna.id } : c)
     );
 
     try {
-      // Como a sua rota POST /card recebe "kanban_id", se você tiver uma rota PUT ou PATCH para editar o card,
-      // chame-a aqui. Se não tiver, você pode enviar um POST com os dados atualizados para salvar.
-      // Exemplo usando um PATCH genérico para atualizar apenas o kanban_id:
+      // 2. Envia para o Banco de Dados. 
+      // Se sua API salvar usando PATCH, PUT ou POST, certifique-se de que a rota está correta:
       await api.patch(`/card/${cardId}`, { kanban_id: novaColuna.id });
     } catch (error) {
-      console.error("Erro ao mover o card no banco de dados:", error);
-      // Se der erro, recarrega a lista original para não dessincronizar
+      console.error("Erro ao salvar movimento do card no servidor:", error);
+      // Se a chamada de API falhar (ex: rota inexistente ou erro 500), 
+      // desfazemos a alteração recarregando do banco:
       getCard();
     }
   }
@@ -131,7 +135,11 @@ export default function Home() {
           </div>
 
           <div className="header-home">
-            <img src={nexo} alt="Logo Nexo" />
+            <h2>
+              {title.split("").map((letter, index) => (
+                <span key={index}>{letter}</span>
+              ))}
+            </h2>
           </div>
 
           <div className="links">
@@ -193,7 +201,9 @@ export default function Home() {
                       {/* Topo do Card: Título e Descrição */}
                       <div className="task-card-header">
                         <h4>{obj.title}</h4>
-                        <p>{obj.description}</p>
+                        <div className="task-card-description">
+                          <p>{obj.description}</p>
+                        </div>
                       </div>
 
                       {/* Rodapé do Card: Barra de Progresso + Setas de Movimentação */}

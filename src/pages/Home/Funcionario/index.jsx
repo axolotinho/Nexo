@@ -24,79 +24,75 @@ export default function Home() {
   }
 
   useEffect(() => {
-      const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-      if (!token) {
-        navigate("/");
-        return;
+    if (!token) {
+      navigate("/");
+      return;
+    }
+
+    try {
+      const decoded = jwtDecode(token);
+      const nomeCompleto = decoded.nome ? String(decoded.nome).trim() : "";
+      const partesNome = nomeCompleto.split(/\s+/);
+      const nomeExibicao = partesNome.slice(0, 2).join(" ");
+
+      const cargoCru = decoded.cargo ? String(decoded.cargo).trim().toUpperCase() : "";
+      let cargoExibicao = "";
+
+      if (cargoCru === "F") {
+        cargoExibicao = "Funcionário";
+      } else if (cargoCru === "G") {
+        cargoExibicao = "Gestor";
+      } else {
+        cargoExibicao = decoded.cargo || "";
       }
 
-      try {
-        const decoded = jwtDecode(token);
+      setUsuario({
+        nome: nomeExibicao,
+        cargo: cargoExibicao,
+        foto: decoded.foto
+      });
 
-        const nomeCompleto = decoded.nome ? String(decoded.nome).trim() : "";
-        const partesNome = nomeCompleto.split(/\s+/);
-        const nomeExibicao = partesNome.slice(0, 2).join(" ");
-
-        const cargoCru = decoded.cargo ? String(decoded.cargo).trim().toUpperCase() : "";
-        let cargoExibicao = "";
-
-        if (cargoCru === "F") {
-          cargoExibicao = "Funcionário";
-        } else if (cargoCru === "G") {
-          cargoExibicao = "Gestor";
-        } else {
-          cargoExibicao = decoded.cargo || "";
-        }
-
-        setUsuario({
-          nome: nomeExibicao,
-          cargo: cargoExibicao,
-          foto: decoded.foto
-        });
-
-        if (cargoCru == "G"){
-          navigate("/home/gestor");
-        }
-
-        getKanban();
-        getCard();
-        
-      } catch (error) {
-        console.error("Erro ao decodificar o token:", error);
-        navigate("/");
+      if (cargoCru == "G"){
+        navigate("/home/gestor");
       }
-    }, []);
+
+      getKanban();
+      getCard();
+      
+    } catch (error) {
+      console.error("Erro ao decodificar o token:", error);
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div>
       <div className="topo">
         <div className="barra">
 
-          {/* ÁREA DA CONTA CORRIGIDA */}
           <div className="account">
             <img 
               src={usuario?.foto || "/default-avatar.png"} 
               alt="Foto do usuário"
             />
-
-            {/* Corrige os espaços no nome */}
-            <h3>
-              {usuario?.nome?.split("").map((letter, index) => (
-                <span key={index}>
-                  {letter === " " ? "\u00A0" : letter}
-                </span>
-              ))}
-            </h3>
-
-            {/* Corrige os espaços no cargo */}
-            <p>
-              {usuario?.cargo?.split("").map((letter, index) => (
-                <span key={index}>
-                  {letter === " " ? "\u00A0" : letter}
-                </span>
-              ))}
-            </p>
+            <div className="user-details">
+              <h3>
+                {usuario?.nome?.split("").map((letter, index) => (
+                  <span key={index}>
+                    {letter === " " ? "\u00A0" : letter}
+                  </span>
+                ))}
+              </h3>
+              <p>
+                {usuario?.cargo?.split("").map((letter, index) => (
+                  <span key={index}>
+                    {letter === " " ? "\u00A0" : letter}
+                  </span>
+                ))}
+              </p>
+            </div>
           </div>
 
           <div className="header-home">
@@ -108,23 +104,23 @@ export default function Home() {
           </div>
 
           <div className="links">
-            <button className="active">
+            <button className="active" title="Início">
               <i className="fa-solid fa-house"></i>
             </button>
 
-            <button onClick={() => navigate("/calendar/funcionario")}>
+            <button onClick={() => navigate("/calendar/funcionario")} title="Calendário">
               <i className="fa-solid fa-calendar"></i>
             </button>
 
-            <button onClick={() => navigate("/chat/funcionario")}>
+            <button onClick={() => navigate("/chat/funcionario")} title="Chat">
               <i className="fa-solid fa-comment-dots"></i>
             </button>
 
-            <button onClick={() => navigate("/task")}>
-              {dia}
+            <button onClick={() => navigate("/task")} title="Tarefas">
+              <span>{dia}</span>
             </button>
 
-            <button onClick={() => navigate("/ia/funcionario")}>
+            <button onClick={() => navigate("/ia/funcionario")} title="Assistente IA">
               <i className="fa-solid fa-dove"></i>
             </button>
           </div>
@@ -155,32 +151,30 @@ export default function Home() {
                 <h3>{kan.name}</h3>
               </div>
 
-        <div className="cards">
-          {card.map((obj) =>
-            obj.kanban_id === kan.id ? (
-              <div key={obj.id} className="task-card">
-                {/* Topo do card: Título e Descrição logo abaixo */}
-                <div className="task-card-header">
-                  <h4>{obj.title}</h4>
-                  <p className="task-card-description">{obj.description}</p>
-                </div>
+              <div className="cards">
+                {card.map((obj) =>
+                  obj.kanban_id === kan.id ? (
+                    <div key={obj.id} className="task-card">
+                      <div className="task-card-header">
+                        <h4>{obj.title}</h4>
+                        <p className="task-card-description">{obj.description}</p>
+                      </div>
 
-                {/* Rodapé do card: Barra de Progresso e Porcentagem na parte de baixo */}
-                <div className="task-card-progress-container">
-                  <div className="task-card-progress-bar">
-                    <div 
-                      className="task-card-progress-fill" 
-                      style={{ width: `${obj.progress || 0}%` }}
-                    ></div>
-                  </div>
-                  <span className="task-card-progress-text">
-                    {obj.progress || 0}%
-                  </span>
-                </div>
+                      <div className="task-card-progress-container">
+                        <div className="task-card-progress-bar">
+                          <div 
+                            className="task-card-progress-fill" 
+                            style={{ width: `${obj.progress || 0}%` }}
+                          ></div>
+                        </div>
+                        <span className="task-card-progress-text">
+                          {obj.progress || 0}%
+                        </span>
+                      </div>
+                    </div>
+                  ) : null
+                )}
               </div>
-            ) : null
-          )}
-        </div>
             </div>
           ))}
         </div>

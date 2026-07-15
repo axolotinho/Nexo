@@ -75,9 +75,6 @@ export default function Home() {
         cargo: cargoExibicao,
         foto: decoded.foto
       });
-      if (cargoCru == "G"){
-        navigate("/home/gestor");
-      }
     } catch (error) {
       console.error("Erro ao decodificar o token:", error);
       navigate("/");
@@ -170,8 +167,8 @@ export default function Home() {
         </div>
       </div>
 
-      <div className='layout'>
-        <div className='lateral'>
+      <div className={`layout ${person ? "chat-open" : ""}`}>
+        <div className={`lateral ${person ? "hide-mobile" : ""}`}>
           {persons.map((p) => (
             <button 
               key={p.id} 
@@ -184,10 +181,17 @@ export default function Home() {
           ))}
         </div>
         
-        <div className='chat'>
+        <div className={`chat ${!person ? "empty-chat" : ""}`}>
           {person ? (
             <div>
               <div className="subtitulo">
+                <button
+                  className="btn-back"
+                  onClick={() => setPerson(null)}
+                >
+                  <i className="fa-solid fa-arrow-left"></i>
+                </button>
+
                 {person.name.split("").map((letter, index) => (
                   <span key={index}>
                     {letter === " " ? "\u00A0" : letter}
@@ -196,7 +200,7 @@ export default function Home() {
               </div>
 
               {/* HISTÓRICO DE MENSAGENS */}
-              <div className='history'>
+              <div className="history">
                 {(messages[person.id] || []).map((msg) => (
                   <div key={msg.id} className={`message-container ${msg.sender}`}>
                     <div className="message-bubble">
@@ -207,10 +211,10 @@ export default function Home() {
               </div>
 
               {/* TECLADO / ENTRADA DE TEXTO */}
-              <form onSubmit={handleSendMessage} className='keyboard'>
-                <input 
-                  type="text" 
-                  placeholder="Digite uma mensagem..." 
+              <form onSubmit={handleSendMessage} className="keyboard">
+                <input
+                  type="text"
+                  placeholder="Digite uma mensagem..."
                   value={typedMessage}
                   onChange={(e) => setTypedMessage(e.target.value)}
                 />

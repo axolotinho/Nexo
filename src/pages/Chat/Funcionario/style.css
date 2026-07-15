@@ -254,3 +254,175 @@
     opacity: 0.7;
     letter-spacing: 1px;
 }
+
+/* =========================================================
+   RESPONSIVIDADE
+========================================================= */
+
+@media (max-width:900px){
+
+    .layout{
+        width:95%;
+    }
+
+    .lateral{
+        width:35%;
+    }
+
+    .chat{
+        width:65%;
+    }
+
+    .message-bubble{
+        max-width:80%;
+    }
+
+}
+
+
+@media (max-width:768px){
+
+    .layout{
+        width:100%;
+        height:calc(100vh - 120px);
+        margin:0;
+        border-radius:0;
+    }
+
+    /* ------------------ CONTATOS ------------------ */
+
+    .lateral{
+        width:100%;
+        padding:15px;
+        border:none;
+    }
+
+    .lateral button{
+        padding:14px;
+        font-size:1rem;
+    }
+
+    .lateral button img{
+        width:45px;
+        height:45px;
+    }
+
+    /* Quando abrir conversa */
+
+    .hide-mobile{
+        display:none;
+    }
+
+    /* ------------------ CHAT ------------------ */
+
+    .chat{
+        width:100%;
+    }
+
+    .chat .subtitulo{
+        font-size:1.2rem;
+        padding:15px;
+        display:flex;
+        align-items:center;
+    }
+
+    .history{
+        padding:15px;
+    }
+
+    .message-bubble{
+        max-width:85%;
+        font-size:.95rem;
+    }
+
+    .keyboard{
+        padding:12px;
+        gap:10px;
+    }
+
+    .keyboard input{
+        height:45px;
+        font-size:.95rem;
+    }
+
+    .keyboard button{
+        width:45px;
+        height:45px;
+    }
+
+    /* Botão voltar */
+
+    .btn-back{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+
+        width:40px;
+        height:40px;
+
+        margin-right:10px;
+
+        border:none;
+        border-radius:50%;
+
+        background:#2892d7;
+        color:white;
+
+        cursor:pointer;
+
+        flex-shrink:0;
+    }
+
+    .btn-back:hover{
+        background:#0d3b66;
+        transform:none;
+    }
+
+    /* Não mostrar a tela vazia no celular */
+
+    /* Esconde completamente o chat quando nenhuma conversa estiver selecionada */
+    .chat.empty-chat{
+        display: none;
+    }
+
+    /* A lista de contatos ocupa toda a largura */
+    .lateral{
+        width: 100%;
+    }
+
+    /* Quando houver uma conversa aberta */
+    .chat:not(.empty-chat){
+        display: block;
+        width: 100%;
+    }
+
+}
+
+
+@media (max-width:480px){
+
+    .lateral button{
+        font-size:.95rem;
+        gap:12px;
+    }
+
+    .lateral button img{
+        width:40px;
+        height:40px;
+    }
+
+    .chat .subtitulo{
+        font-size:1.05rem;
+    }
+
+    .message-bubble{
+        max-width:92%;
+        font-size:.9rem;
+    }
+
+    .keyboard input{
+        font-size:.9rem;
+        padding:0 15px;
+    }
+
+}

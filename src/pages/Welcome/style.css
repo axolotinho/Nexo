@@ -80,7 +80,7 @@
 
 .welcome h1 {
   color: #ffffff;
-  font-size: 14rem;
+  font-size: 14rem; /* Tamanho gigante para Desktop */
   font-weight: 800;
   letter-spacing: 2px;
   margin-bottom: 12px;
@@ -212,4 +212,65 @@
 .buttons button:last-child:active {
   transform: translateY(3px);
   box-shadow: 0 2px 0 #072544;
+}
+
+/* ==========================================
+   MÍDIA QUERIES (Responsividade Mobile)
+   ========================================== */
+
+@media (max-width: 768px) {
+  .welcome h1 {
+    font-size: 8rem; /* Diminui o título para tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome {
+    padding: 0 20px;
+  }
+
+  /* Impede que os círculos flutuantes entrem na frente do texto no celular */
+  .welcome::before {
+    width: 60px;
+    height: 60px;
+    top: 8%;
+    left: 8%;
+  }
+
+  .welcome::after {
+    width: 35px;
+    height: 35px;
+    bottom: 8%;
+    right: 8%;
+  }
+
+  .welcome h3 {
+    font-size: 1.5rem; /* Subtítulo um pouco menor, mas ainda bem visível */
+    letter-spacing: 2px;
+  }
+
+  .welcome h1 {
+    font-size: 5rem; /* Título ideal para celular. Grande e destacado sem quebrar */
+    margin-bottom: 8px;
+  }
+
+  .welcome h1::after {
+    margin: 8px auto 30px; /* Reduz o espaço abaixo do risco decorativo */
+    width: 70px;
+  }
+
+  /* Botões empilhados verticalmente para facilitar o toque */
+  .buttons {
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    max-width: 280px; /* Largura ideal para não ocupar a tela inteira */
+    margin-top: 8px;
+  }
+
+  .buttons button {
+    width: 100%;
+    font-size: 1.1rem; /* Botões ligeiramente maiores para melhor legibilidade */
+    padding: 16px 20px; /* Mais "gordinhos" no mobile para facilitar o clique com o polegar */
+  }
 }
