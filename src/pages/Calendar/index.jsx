@@ -1,5 +1,6 @@
 import { useState, useEffect} from 'react' 
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import api from '../../services/api'
 import './style.css'
 
@@ -8,6 +9,7 @@ export default function Calendar() {
   const description = "Veja como está sua agenda"
   const hoje = new Date();
   const dia = hoje.getDate();
+  const [usuario, setUsuario] = useState(null);
   const mes = hoje.toLocaleString("pt-BR", {
     month: "long",
   });
@@ -34,6 +36,33 @@ export default function Calendar() {
     if (!token) {
       navigate("/");
     }
+    try {
+      const decoded = jwtDecode(token);
+      const nomeCompleto = decoded.nome ? String(decoded.nome).trim() : "";
+      const partesNome = nomeCompleto.split(/\s+/); 
+      const nomeExibicao = partesNome.slice(0, 2).join(" "); 
+
+      const cargoCru = decoded.cargo ? String(decoded.cargo).trim().toUpperCase() : "";
+      let cargoExibicao = "";
+
+      if (cargoCru === "F") {
+        cargoExibicao = "Funcionário";
+      } else if (cargoCru === "G") {
+        cargoExibicao = "Gestor";
+      } else {
+        cargoExibicao = decoded.cargo || "";
+      }
+
+      setUsuario({
+        nome: nomeExibicao,
+        cargo: cargoExibicao,
+        foto: decoded.foto
+      });
+      
+    } catch (error) {
+      console.error("Erro ao decodificar o token:", error);
+      navigate("/");
+    }
 
     getCard();
   }, []);
@@ -43,6 +72,31 @@ export default function Calendar() {
       <div className="topo">
 
         <div className="barra">
+          {/* ÁREA DA CONTA CORRIGIDA */}
+          <div className="account">
+            <img 
+              src={usuario?.foto || "/default-avatar.png"} 
+              alt="Foto do usuário"
+            />
+
+            {/* Corrige os espaços no nome */}
+            <h3>
+              {usuario?.nome?.split("").map((letter, index) => (
+                <span key={index}>
+                  {letter === " " ? "\u00A0" : letter}
+                </span>
+              ))}
+            </h3>
+
+            {/* Corrige os espaços no cargo */}
+            <p>
+              {usuario?.cargo?.split("").map((letter, index) => (
+                <span key={index}>
+                  {letter === " " ? "\u00A0" : letter}
+                </span>
+              ))}
+            </p>
+          </div>
 
           <div className="header-home">
             <h2>

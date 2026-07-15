@@ -134,7 +134,7 @@ body{
 
 /* ================= KANBAN ================= */
 
-.layout{
+.layout1{
     width:100%;
     display:flex;
     justify-content:center;
@@ -212,4 +212,65 @@ body{
 .task-card p{
     color:#555;
     font-size:.95rem;
+}
+
+/* ================= ÁREA DA CONTA (CANTO ESQUERDO) ================= */
+
+.account {
+    position: absolute;
+    left: 40px; /* Alinha perfeitamente à esquerda */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Foto em formato de círculo */
+.account img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #2892d7; /* Borda azul para combinar com o design */
+}
+
+/* Nome com letras pretas */
+.account h3 {
+    color: #000000;
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+}
+
+.account h3 span {
+    display: inline-block;
+    transition: .2s;
+}
+
+/* Efeito de balanço ao passar o mouse nas letras do nome */
+.account h3 span:hover {
+    color: #2892d7;
+    transform: translateY(-3px);
+}
+
+/* Cargo com letras cinzas */
+.account p {
+    color: #7f8c8d; /* Cinza elegante */
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin: 0;
+    margin-left: 5px; /* Sutil espaçamento entre o nome e o cargo */
+    display: flex;
+}
+
+.account p span {
+    display: inline-block;
+    transition: .2s;
+}
+
+.account p span:hover {
+    color: #bdc3c7;
+    transform: translateY(-2px);
 }

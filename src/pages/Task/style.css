@@ -1,0 +1,162 @@
+/* =========================================================
+   ESTILO DA PÁGINA DE TAREFAS (LAYOUT 2)
+   ========================================================= */
+
+.layout2 {
+    width: 92%;
+    max-width: 1200px;
+    margin: 30px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    padding-bottom: 50px;
+}
+
+/* Card Individual de Tarefa */
+.task-card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 220px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    border: 2px solid transparent;
+}
+
+.task-card:hover {
+    transform: translateY(-6px);
+    border-color: #2892d7;
+    box-shadow: 0 12px 25px rgba(40, 146, 215, 0.25);
+}
+
+/* Cabeçalho do Card */
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.task-header h3 {
+    color: #0d3b66;
+    font-size: 1.4rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0;
+}
+
+.task-difficulty {
+    background: #eef7fd;
+    color: #2892d7;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 8px;
+    border: 1px solid #c2d2df;
+}
+
+/* Descrição do card */
+.task-desc {
+    color: #555;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    margin-bottom: 15px;
+    display: -webkit-box;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Barra de Progresso */
+.task-progress-container {
+    background: #eef7fd;
+    border-radius: 10px;
+    height: 18px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 15px;
+    border: 1px solid #c2d2df;
+}
+
+.task-progress-bar {
+    background: #2892d7;
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.4s ease;
+}
+
+.task-progress-text {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #0d3b66;
+}
+
+/* Rodapé do Card (Data de Entrega e Avatares) */
+.task-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eef7fd;
+    padding-top: 12px;
+}
+
+.task-due {
+    color: #2892d7;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.task-due i {
+    margin-right: 4px;
+}
+
+/* Grupo de fotos dos responsáveis */
+.task-responsaveis {
+    display: flex;
+    align-items: center;
+}
+
+.avatar-responsavel {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ffffff;
+    margin-left: -8px; /* Efeito de sobreposição de fotos */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease, z-index 0.2s ease;
+}
+
+.avatar-responsavel:hover {
+    transform: scale(1.2);
+    z-index: 10;
+}
+
+.avatar-responsavel:first-child {
+    margin-left: 0;
+}
+
+/* Estado de nenhuma tarefa */
+.no-tasks {
+    grid-column: 1 / -1;
+    text-align: center;
+    background: #ffffff;
+    padding: 50px;
+    border-radius: 18px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.no-tasks p {
+    color: #0d3b66;
+    font-size: 1.6rem;
+    font-weight: 800;
+}

@@ -4,7 +4,8 @@ import Welcome from "./pages/Welcome";
 import Chat from "./pages/Chat";
 import Calendar from "./pages/Calendar";
 import Ia from "./pages/IA";
-import Login from "./pages/Login";
+import LoginF from "./pages/Login/Funcionario";
+import LoginG from "./pages/Login/Gestor";
 import Task from "./pages/Task";
 import './App.css'
 
@@ -16,7 +17,8 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/calendar" element={<Calendar />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login/funcionario" element={<LoginF />} />
+        <Route path="/login/gestor" element={<LoginG />} />
         <Route path="/ia" element={<Ia />} />
         <Route path="/task" element={<Task />} />
       </Routes>

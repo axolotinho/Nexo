@@ -30,8 +30,8 @@ export default function Welcome() {
       </h1>
 
       <div className="buttons">
-        <button onClick={() => navigate("/login")}>Gestor</button>
-        <button onClick={() => navigate("/login")}>Funcionário</button>
+        <button onClick={() => navigate("/login/gestor")}>Gestor</button>
+        <button onClick={() => navigate("/login/funcionario")}>Funcionário</button>
       </div>
     </div>
   );
