@@ -504,3 +504,61 @@ body {
     align-items:center;
 
 }
+
+.column-title {
+  position: relative;
+}
+
+.btn-delete-column {
+  opacity: 0.7;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.btn-delete-column:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+/* Container que centraliza o loading na tela */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 300px;
+  color: #ffffff;
+  font-family: sans-serif;
+}
+
+/* O círculo que fica girando */
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #4f46e5; /* Cor do spinner (pode mudar para combinar com o seu layout) */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+/* Animação de rotação */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Hover suave para o botão X da coluna */
+.btn-delete-column {
+  opacity: 0.75;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.btn-delete-column:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}

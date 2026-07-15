@@ -12,6 +12,9 @@ export default function Task() {
   const [cards, setCards] = useState([])
   const [userId, setUserId] = useState(null)
   const [usuario, setUsuario] = useState(null);
+  
+  // 1. ADICIONADO: Estado para controlar o carregamento dos cards
+  const [loading, setLoading] = useState(true);
 
   async function getCard() {
     try {
@@ -33,8 +36,6 @@ export default function Task() {
     try {
       const decoded = jwtDecode(token);
       
-      // Captura o ID do usuário diretamente do token JWT decodificado
-      // Normalmente o jwt-decode coloca a identidade no campo 'sub'
       const idDoUsuario = decoded.sub || decoded.identity; 
       setUserId(idDoUsuario ? Number(idDoUsuario) : null);
 
@@ -61,40 +62,42 @@ export default function Task() {
 
       if (cargoCru === "G"){
         navigate("/home/gestor");
+        return;
       }
     } catch (error) {
       console.error("Erro ao decodificar o token:", error);
       navigate("/");
+      return;
     }
 
-    getCard();
+    // 2. ALTERADO: Executa a busca de cards gerenciando o estado do loading
+    const carregarDados = async () => {
+      setLoading(true);
+      await getCard();
+      setLoading(false);
+    };
+
+    carregarDados();
   }, []);
 
 
-  // Filtra comparando os IDs convertidos para String (método mais seguro)
   // Filtra apenas as tarefas do usuário que devem ser entregues hoje
   const minhasTarefas = cards.filter(card => {
-    // 1. Verifica se o usuário logado é um dos responsáveis
     const ehResponsavel = card.responsaveis?.some(
       responsavel => String(responsavel.id) === String(userId)
     );
 
     if (!ehResponsavel) return false;
-
-    // 2. Verifica se o card tem prazo definido
     if (!card.due_date) return false;
 
-    // Extrai apenas a parte da data "AAAA-MM-DD" para ignorar horas/fuso horário
     const dataCardStr = card.due_date.split("T")[0];
 
-    // Obtém a data de hoje formatada em "AAAA-MM-DD" no fuso local
     const hoje = new Date();
     const ano = hoje.getFullYear();
     const mes = String(hoje.getMonth() + 1).padStart(2, '0');
     const diaCorrente = String(hoje.getDate()).padStart(2, '0');
     const hojeStr = `${ano}-${mes}-${diaCorrente}`;
 
-    // Retorna apenas se a data do card coincidir exatamente com o dia de hoje
     return dataCardStr === hojeStr;
   });
 
@@ -108,7 +111,6 @@ export default function Task() {
               alt="Foto do usuário"
             />
 
-            {/* Corrige os espaços no nome */}
             <h3>
               {usuario?.nome?.split("").map((letter, index) => (
                 <span key={index}>
@@ -117,7 +119,6 @@ export default function Task() {
               ))}
             </h3>
 
-            {/* Corrige os espaços no cargo */}
             <p>
               {usuario?.cargo?.split("").map((letter, index) => (
                 <span key={index}>
@@ -168,7 +169,13 @@ export default function Task() {
 
       {/* ÁREA DE LAYOUT DOS CARDS */}
       <div className="layout2">
-        {minhasTarefas.length > 0 ? (
+        {/* 3. ALTERADO: Agora verifica se está carregando antes de renderizar os cards ou o "Sem tarefas" */}
+        {loading ? (
+          <div className="loading-container">
+            <div className="spinner"></div>
+            <p>Buscando suas tarefas de hoje...</p>
+          </div>
+        ) : minhasTarefas.length > 0 ? (
           minhasTarefas.map((card) => (
             <div key={card.id} className="task-card">
               <div className="task-header">
@@ -177,7 +184,6 @@ export default function Task() {
               
               <p className="task-desc">{card.description}</p>
               
-              {/* Barra de Progresso estilizada */}
               <div className="task-progress-container">
                 <div className="task-progress-bar" style={{ width: `${card.progress}%` }}></div>
                 <span className="task-progress-text">{card.progress}% concluído</span>
@@ -190,7 +196,6 @@ export default function Task() {
                   </span>
                 )}
                 
-                {/* Responsáveis listados (mostrando fotos, se houver) */}
                 <div className="task-responsaveis">
                   {card.responsaveis.map(resp => (
                     <img 

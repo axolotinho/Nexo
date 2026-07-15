@@ -13,6 +13,9 @@ export default function Home() {
   const [card, setCard] = useState([])
   const [usuario, setUsuario] = useState(null);
 
+  const [loading, setLoading] = useState(true);
+
+
   async function getKanban(){
     const kanbanFromApi = await api.get('/kanban')
     setKanban(kanbanFromApi.data);
@@ -57,9 +60,18 @@ export default function Home() {
       if (cargoCru == "G"){
         navigate("/home/gestor");
       }
+      const carregarDadosIniciais = async () => {
+        setLoading(true);
+        try {
+          await Promise.all([getKanban(), getCard()]);
+        } catch (error) {
+          console.error("Erro ao carregar dados iniciais:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
 
-      getKanban();
-      getCard();
+      carregarDadosIniciais();
       
     } catch (error) {
       console.error("Erro ao decodificar o token:", error);
@@ -137,47 +149,54 @@ export default function Home() {
       </div>
 
       <div className="layout1">
-        <div className="kanban">
-          {kanban.map((kan) => (
-            <div 
-              key={kan.id}
-              className="kanban-column"
-              style={{ border: `2px solid ${kan.color}` }}
-            >
+        {loading ? (
+          <div className="loading-container">
+            <div className="spinner"></div>
+            <p>Carregando seu quadro Kanban...</p>
+          </div>
+        ) : (
+          <div className="kanban">
+            {kanban.map((kan) => (
               <div 
-                className="column-title"
-                style={{background: kan.color}}
+                key={kan.id}
+                className="kanban-column"
+                style={{ border: `2px solid ${kan.color}` }}
               >
-                <h3>{kan.name}</h3>
-              </div>
+                <div 
+                  className="column-title"
+                  style={{background: kan.color}}
+                >
+                  <h3>{kan.name}</h3>
+                </div>
 
-              <div className="cards">
-                {card.map((obj) =>
-                  obj.kanban_id === kan.id ? (
-                    <div key={obj.id} className="task-card">
-                      <div className="task-card-header">
-                        <h4>{obj.title}</h4>
-                        <p className="task-card-description">{obj.description}</p>
-                      </div>
-
-                      <div className="task-card-progress-container">
-                        <div className="task-card-progress-bar">
-                          <div 
-                            className="task-card-progress-fill" 
-                            style={{ width: `${obj.progress || 0}%` }}
-                          ></div>
+                <div className="cards">
+                  {card.map((obj) =>
+                    obj.kanban_id === kan.id ? (
+                      <div key={obj.id} className="task-card">
+                        <div className="task-card-header">
+                          <h4>{obj.title}</h4>
+                          <p className="task-card-description">{obj.description}</p>
                         </div>
-                        <span className="task-card-progress-text">
-                          {obj.progress || 0}%
-                        </span>
+
+                        <div className="task-card-progress-container">
+                          <div className="task-card-progress-bar">
+                            <div 
+                              className="task-card-progress-fill" 
+                              style={{ width: `${obj.progress || 0}%` }}
+                            ></div>
+                          </div>
+                          <span className="task-card-progress-text">
+                            {obj.progress || 0}%
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  ) : null
-                )}
+                    ) : null
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -8,15 +8,19 @@ import './style.css'
 export default function Home() {
   const title = "Kanban"
   const description = "Veja como está indo o trabalho em equipe"
-  const dia = new Date().getDate();
   const navigate = useNavigate();
+  
+  // Estados do Kanban, Cards e Usuário
   const [kanban, setKanban] = useState([])
   const [card, setCard] = useState([])
   const [usuario, setUsuario] = useState(null);
+  
+  // Estado para controlar o Loading das requisições do Kanban/Cards
+  const [loading, setLoading] = useState(true);
 
+  // Busca as colunas do Kanban do servidor
   async function getKanban(){
     try {
-      // Endpoint correto para buscar as colunas do Kanban
       const response = await api.get('/kanban');
       setKanban(response.data);
     } catch (error) {
@@ -24,6 +28,7 @@ export default function Home() {
     }
   }
 
+  // Busca os cards do servidor
   async function getCard(){
     try {
       const cardFromApi = await api.get('/card');
@@ -33,7 +38,7 @@ export default function Home() {
     }
   }
 
-  // Função para mover o card de coluna
+  // Função para mover o card de coluna (Esquerda/Direita)
   async function moverCard(cardId, direcao) {
     const cardAtual = card.find(c => c.id === cardId);
     if (!cardAtual) return;
@@ -43,25 +48,35 @@ export default function Home() {
 
     let novoIndice = indiceColunaAtual + direcao;
 
-    // Impede que passe dos limites do Kanban
     if (novoIndice < 0 || novoIndice >= kanban.length) return;
 
     const novaColuna = kanban[novoIndice];
 
-    // 1. Atualização Otimista: muda o estado na tela primeiro para ficar instantâneo
+    // Atualização Otimista
     setCard(prevCards => 
       prevCards.map(c => c.id === cardId ? { ...c, kanban_id: novaColuna.id } : c)
     );
 
     try {
-      // 2. Envia para o Banco de Dados. 
-      // Se sua API salvar usando PATCH, PUT ou POST, certifique-se de que a rota está correta:
       await api.patch(`/card/${cardId}`, { kanban_id: novaColuna.id });
     } catch (error) {
       console.error("Erro ao salvar movimento do card no servidor:", error);
-      // Se a chamada de API falhar (ex: rota inexistente ou erro 500), 
-      // desfazemos a alteração recarregando do banco:
       getCard();
+    }
+  }
+
+  // Função para deletar uma coluna Kanban (com o botão "X")
+  async function deletarColuna(kanbanId) {
+    const confirmar = window.confirm("Tem certeza que deseja excluir esta coluna? Todos os cards nela também serão apagados.");
+    if (!confirmar) return;
+
+    try {
+      await api.delete(`/kanban/${kanbanId}`);
+      setKanban(prev => prev.filter(k => k.id !== kanbanId));
+      setCard(prev => prev.filter(c => c.kanban_id !== kanbanId));
+    } catch (error) {
+      console.error("Erro ao deletar coluna:", error);
+      alert("Não foi possível deletar a coluna. Verifique se o backend está ativo.");
     }
   }
 
@@ -97,8 +112,15 @@ export default function Home() {
         foto: decoded.foto
       });
 
-      getKanban();
-      getCard();
+      // Função assíncrona interna para buscar todos os dados juntos e só desativar o Loading no final
+      const carregarDadosIniciais = async () => {
+        setLoading(true);
+        // Executa as duas requisições em paralelo para carregar mais rápido
+        await Promise.all([getKanban(), getCard()]);
+        setLoading(false);
+      };
+
+      carregarDadosIniciais();
       
     } catch (error) {
       console.error("Erro ao decodificar o token:", error);
@@ -180,77 +202,110 @@ export default function Home() {
       </div>
 
       <div className="layout1">
-        <div className="kanban">
-          {kanban.map((kan, idxColuna) => (
-            <div 
-              key={kan.id}
-              className="kanban-column"
-              style={{ border: `2px solid ${kan.color}` }}
-            >
+        {/* Se o loading for true, exibe a tela de carregamento */}
+        {loading ? (
+          <div className="loading-container">
+            <div className="spinner"></div>
+            <p>Carregando seu quadro Kanban...</p>
+          </div>
+        ) : (
+          /* Quando terminar de carregar, exibe o Kanban normalmente */
+          <div className="kanban">
+            {kanban.map((kan, idxColuna) => (
               <div 
-                className="column-title"
-                style={{background: kan.color}}
+                key={kan.id}
+                className="kanban-column"
+                style={{ border: `2px solid ${kan.color}`, position: 'relative' }}
               >
-                <h3>{kan.name}</h3>
-              </div>
+                {/* Título da coluna com o botão "X" */}
+                <div 
+                  className="column-title"
+                  style={{ 
+                    background: kan.color,
+                    position: 'relative',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '10px 15px'
+                  }}
+                >
+                  <h3 style={{ margin: 0 }}>{kan.name}</h3>
+                  
+                  <button 
+                    className="btn-delete-column"
+                    onClick={() => deletarColuna(kan.id)}
+                    title="Excluir coluna"
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      color: '#ffffff',
+                      fontSize: '18px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '0 2px'
+                    }}
+                  >
+                    <i className="fa-solid fa-xmark"></i>
+                  </button>
+                </div>
 
-              <div className="cards">
-                {card.map((obj) =>
-                  obj.kanban_id === kan.id ? (
-                    <div key={obj.id} className="task-card">
-                      {/* Topo do Card: Título e Descrição */}
-                      <div className="task-card-header">
-                        <h4>{obj.title}</h4>
-                        <div className="task-card-description">
-                          <p>{obj.description}</p>
-                        </div>
-                      </div>
-
-                      {/* Rodapé do Card: Barra de Progresso + Setas de Movimentação */}
-                      <div className="task-card-footer">
-                        {/* Botão de mover para a Esquerda (só aparece se não for a primeira coluna) */}
-                        {idxColuna > 0 ? (
-                          <button 
-                            className="btn-move" 
-                            onClick={() => moverCard(obj.id, -1)}
-                            title="Mover para esquerda"
-                          >
-                            <i className="fa-solid fa-chevron-left"></i>
-                          </button>
-                        ) : <div className="btn-spacer"></div>}
-
-                        {/* Progresso centralizado */}
-                        <div className="task-card-progress-container">
-                          <div className="task-card-progress-bar">
-                            <div 
-                              className="task-card-progress-fill" 
-                              style={{ width: `${obj.progress || 0}%` }}
-                            ></div>
+                <div className="cards">
+                  {card.map((obj) =>
+                    obj.kanban_id === kan.id ? (
+                      <div key={obj.id} className="task-card">
+                        {/* Topo do Card */}
+                        <div className="task-card-header">
+                          <h4>{obj.title}</h4>
+                          <div className="task-card-description">
+                            <p>{obj.description}</p>
                           </div>
-                          <span className="task-card-progress-text">
-                            {obj.progress || 0}%
-                          </span>
                         </div>
 
-                        {/* Botão de mover para a Direita (só aparece se não for a última coluna) */}
-                        {idxColuna < kanban.length - 1 ? (
-                          <button 
-                            className="btn-move" 
-                            onClick={() => moverCard(obj.id, 1)}
-                            title="Mover para direita"
-                          >
-                            <i className="fa-solid fa-chevron-right"></i>
-                          </button>
-                        ) : <div className="btn-spacer"></div>}
-                      </div>
+                        {/* Rodapé do Card */}
+                        <div className="task-card-footer">
+                          {idxColuna > 0 ? (
+                            <button 
+                              className="btn-move" 
+                              onClick={() => moverCard(obj.id, -1)}
+                              title="Mover para esquerda"
+                            >
+                              <i className="fa-solid fa-chevron-left"></i>
+                            </button>
+                          ) : <div className="btn-spacer"></div>}
 
-                    </div>
-                  ) : null
-                )}
+                          <div className="task-card-progress-container">
+                            <div className="task-card-progress-bar">
+                              <div 
+                                className="task-card-progress-fill" 
+                                style={{ width: `${obj.progress || 0}%` }}
+                              ></div>
+                            </div>
+                            <span className="task-card-progress-text">
+                              {obj.progress || 0}%
+                            </span>
+                          </div>
+
+                          {idxColuna < kanban.length - 1 ? (
+                            <button 
+                              className="btn-move" 
+                              onClick={() => moverCard(obj.id, 1)}
+                              title="Mover para direita"
+                            >
+                              <i className="fa-solid fa-chevron-right"></i>
+                            </button>
+                          ) : <div className="btn-spacer"></div>}
+                        </div>
+
+                      </div>
+                    ) : null
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

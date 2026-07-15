@@ -10,31 +10,41 @@ export default function Calendar() {
   const hoje = new Date();
   const dia = hoje.getDate();
   const [usuario, setUsuario] = useState(null);
+  const [loading, setLoading] = useState(true); // Controla o estado de carregamento
+
   const mes = hoje.toLocaleString("pt-BR", {
     month: "long",
   });
+  
   const diasNoMes = new Date(
     hoje.getFullYear(),
     hoje.getMonth() + 1,
     0
   ).getDate();
+  
   const dias = Array.from(
     { length: diasNoMes },
     (_, i) => i + 1
   );
+  
   const navigate = useNavigate();
   const [card, setCard] = useState([])
-  async function getCard(){
-    const cardFromApi = await api.get('/card')
 
-    setCard(cardFromApi.data);
+  async function getCard(){
+    try {
+      const cardFromApi = await api.get('/card')
+      setCard(cardFromApi.data);
+    } catch (error) {
+      console.error("Erro ao buscar cards:", error);
+    }
   }
 
-  useEffect (() =>  {
+  useEffect(() => {
     const token = localStorage.getItem("token");
     
     if (!token) {
       navigate("/");
+      return;
     }
     try {
       const decoded = jwtDecode(token);
@@ -61,16 +71,24 @@ export default function Calendar() {
     } catch (error) {
       console.error("Erro ao decodificar o token:", error);
       navigate("/");
+      return;
     }
-    getCard();
+
+    // Busca as tarefas controlando o loading do componente
+    const carregarDados = async () => {
+      setLoading(true);
+      await getCard();
+      setLoading(false);
+    };
+
+    carregarDados();
   }, []);
 
   return (
     <div>
       <div className="topo">
-
         <div className="barra">
-          {/* ÁREA DA CONTA CORRIGIDA */}
+          {/* ÁREA DA CONTA */}
           <div className="account">
             <img 
               src={usuario?.foto || "/default-avatar.png"} 
@@ -104,7 +122,6 @@ export default function Calendar() {
             </h2>
           </div>
 
-
           <div className="links">
             <button onClick={() => navigate("/home/gestor")}>
               <i className="fa-solid fa-house"></i>
@@ -115,7 +132,7 @@ export default function Calendar() {
             </button>
 
             <button onClick={() => navigate("/monitoring")}>
-              <i class="fa-solid fa-eye"></i>
+              <i className="fa-solid fa-eye"></i>
             </button>
 
             <button onClick={() => navigate("/chat/gestor")}>
@@ -123,18 +140,15 @@ export default function Calendar() {
             </button>
 
             <button onClick={() => navigate("/create")}>
-              <i class="fa-solid fa-plus"></i>
+              <i className="fa-solid fa-plus"></i>
             </button>
 
             <button onClick={() => navigate("/ia/gestor")}>
               <i className="fa-solid fa-dove"></i>
             </button>
           </div>
-
         </div>
-
       </div>
-
 
       <div className="subtitulo">
         {description.split("").map((letter, index) => (
@@ -143,33 +157,61 @@ export default function Calendar() {
           </span>
         ))}
       </div>
-<div className="calendar">
-        <h3>{mes} de {hoje.getFullYear()}</h3>
+
+      <div className="calendar">
+        <h3 style={{ textTransform: 'capitalize' }}>{mes} de {hoje.getFullYear()}</h3>
         <div className="calendar-wrapper">
-          <div className="calendar-grid">
-            {dias.map((dia) => (
-              <div key={dia} className="day">
+          
+          {loading ? (
+            /* Renderiza a estrutura de loading centralizada dentro do calendário */
+            <div className="loading-container-calendar" style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              minHeight: '300px',
+              width: '100%',
+              textAlign: 'center'
+            }}>
+              <div className="spinner"></div>
+              <p style={{ color: '#0d3b66', fontWeight: 800, marginTop: '15px' }}>
+                Carregando calendário de tarefas...
+              </p>
+            </div>
+          ) : (
+            <div className="calendar-grid">
+              {dias.map((diaCorrente) => (
+                <div key={diaCorrente} className="day">
+                  <span className="day-number">{diaCorrente}</span>
 
-                <span className="day-number">{dia}</span>
+                  {card
+                    .filter((ca) => {
+                      // Verifica se existe data_entrega ou due_date (garante retrocompatibilidade)
+                      const dataAlvo = ca.due_date || ca.data_entrega;
+                      if (!dataAlvo) return false;
 
-                {card
-                  .filter((ca) => {
-                    const data = new Date(ca.data_entrega);
+                      // Evita problemas de conversão de fuso horário dividindo a string diretamente
+                      const partesData = dataAlvo.split("T")[0].split("-");
+                      const anoCard = parseInt(partesData[0], 10);
+                      const mesCard = parseInt(partesData[1], 10) - 1; // Meses no JS vão de 0 a 11
+                      const diaCard = parseInt(partesData[2], 10);
 
-                    return (
-                      data.getDate() === dia &&
-                      data.getMonth() === hoje.getMonth() &&
-                      data.getFullYear() === hoje.getFullYear()
-                    );
-                  })
-                  .map((ca) => (
-                    <div key={ca.id} className="card">
-                      <span>{ca.title}</span>
-                    </div>
-                ))}
-              </div>
-            ))}
-          </div>
+                      return (
+                        diaCard === diaCorrente &&
+                        mesCard === hoje.getMonth() &&
+                        anoCard === hoje.getFullYear()
+                      );
+                    })
+                    .map((ca) => (
+                      <div key={ca.id} className="card">
+                        <span>{ca.title}</span>
+                      </div>
+                    ))}
+                </div>
+              ))}
+            </div>
+          )}
+          
         </div>
       </div>
     </div>

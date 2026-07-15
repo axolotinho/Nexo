@@ -160,3 +160,47 @@
     font-size: 1.6rem;
     font-weight: 800;
 }
+/* =========================================================
+   ESTILO DO LOADING (CENTRALIZADO NO GRID DA PÁGINA)
+   ========================================================= */
+
+.loading-container {
+    grid-column: 1 / -1; /* Força o loading a ocupar toda a largura do Grid */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 250px;
+    text-align: center;
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 50px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.loading-container p {
+    color: #0d3b66;
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-top: 15px;
+}
+
+/* Spinner animado */
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #eef7fd;
+    border-left-color: #2892d7; /* Mesma cor azul do seu tema */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    box-sizing: border-box;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
