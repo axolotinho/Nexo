@@ -89,6 +89,11 @@ body {
 .header h2 span:nth-child(2) { animation-delay: 0.2s; }
 .header h2 span:nth-child(3) { animation-delay: 0.3s; }
 .header h2 span:nth-child(4) { animation-delay: 0.4s; }
+.header h2 span:nth-child(5) { animation-delay: 0.5s; }
+.header h2 span:nth-child(6) { animation-delay: 0.6s; }
+.header h2 span:nth-child(7) { animation-delay: 0.7s; }
+.header h2 span:nth-child(8) { animation-delay: 0.8s; }
+.header h2 span:nth-child(9) { animation-delay: 0.9s; }
 
 .header h3 {
   color: #ffffff;
@@ -331,7 +336,14 @@ input[type="file"] {
    MÍDIA QUERIES (Responsividade Mobile)
    ========================================== */
 
+@media (max-width: 900px) {
+  .header h2 span{
+    font-size: 2.5rem; /* Ajusta o tamanho do título para telas menores */
+  }
+}
+
 @media (max-width: 768px) {
+
   .header h2 {
     font-size: 3.8rem; /* Evita que o texto quebre ou saia da tela */
   }
