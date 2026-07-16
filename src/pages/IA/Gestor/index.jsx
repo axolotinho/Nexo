@@ -147,7 +147,7 @@ export default function Ia() {
           </div>
 
           <div className="links">
-            <button onClick={() => navigate("home/gestor")}>
+            <button onClick={() => navigate("/home/gestor")}>
               <i className="fa-solid fa-house"></i>
             </button>
 
