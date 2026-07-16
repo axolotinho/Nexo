@@ -381,3 +381,24 @@ input[type="file"] {
   }
 
 }
+
+
+/* Estilo quando o botão de login está desativado (carregando) */
+.login-container button:disabled {
+  background-color: #7f8c8d; /* Cor cinza neutra */
+  cursor: not-allowed;
+  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Animação suave para o ícone de spinner girar caso seu FontAwesome não faça sozinho */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.fa-spin {
+  animation: spin 1s linear infinite;
+}

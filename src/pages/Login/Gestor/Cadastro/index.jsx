@@ -10,6 +10,7 @@ export default function Login() {
   const navigate = useNavigate();
 
   const [failed, setFailed] = useState(false);
+  const [loading, setLoading] = useState(false); // 1. Estado de carregamento adicionado
 
   const inputGDuq = useRef(null);
   const inputGPassword = useRef(null);
@@ -35,6 +36,11 @@ export default function Login() {
   }
 
   async function handleCadastro() {
+    // Evita cliques múltiplos durante o processamento do envio
+    if (loading) return;
+
+    setLoading(true); // 2. Inicia o loading
+
     const formData = new FormData();
 
     formData.append("nome", cadastro.nome);
@@ -69,6 +75,8 @@ export default function Login() {
       setTimeout(() => {
         setFailed(false);
       }, 3000);
+    } finally {
+      setLoading(false); // 3. Desativa o loading no final da requisição
     }
   }
 
@@ -98,7 +106,7 @@ export default function Login() {
       </div>
 
       <div className="login-container">
-        {/* CADASTRO FUNCIONÁRIO */}
+        {/* CADASTRO GESTOR */}
         <div className="Funcionario">
           <div className="top funcionario">
             <h2>Cadastro</h2>
@@ -109,6 +117,7 @@ export default function Login() {
             name="nome"
             placeholder="Digite seu nome"
             onChange={handleCadastroChange}
+            disabled={loading} // Desabilita o campo durante o loading
           />
 
           <label>CPF</label>
@@ -116,6 +125,7 @@ export default function Login() {
             name="cpf"
             placeholder="Digite seu CPF"
             onChange={handleCadastroChange}
+            disabled={loading}
           />
 
           <label>Email</label>
@@ -123,6 +133,7 @@ export default function Login() {
             name="email"
             placeholder="Digite seu email"
             onChange={handleCadastroChange}
+            disabled={loading}
           />
 
           <label>Senha</label>
@@ -131,6 +142,7 @@ export default function Login() {
             name="password"
             placeholder="Digite sua senha"
             onChange={handleCadastroChange}
+            disabled={loading}
           />
 
           <label>Foto</label>
@@ -139,6 +151,7 @@ export default function Login() {
             accept="image/*"
             name="foto"
             onChange={handleCadastroChange}
+            disabled={loading}
           />
 
           <label>Idade</label>
@@ -147,6 +160,7 @@ export default function Login() {
             name="idade"
             placeholder="Digite sua idade"
             onChange={handleCadastroChange}
+            disabled={loading}
           />
 
           <label>Hora de entrada</label>
@@ -154,6 +168,7 @@ export default function Login() {
             type="time"
             name="hora_entrada"
             onChange={handleCadastroChange}
+            disabled={loading}
           />
 
           <label>Hora de saída</label>
@@ -161,10 +176,19 @@ export default function Login() {
             type="time"
             name="hora_saida"
             onChange={handleCadastroChange}
+            disabled={loading}
           />
 
-          <button onClick={handleCadastro}>
-            Cadastrar
+          {/* 4. Botão com estado de carregamento dinâmico */}
+          <button onClick={handleCadastro} disabled={loading} className={loading ? "btn-loading" : ""}>
+            {loading ? (
+              <>
+                <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: '8px' }}></i>
+                Cadastrando...
+              </>
+            ) : (
+              "Cadastrar"
+            )}
           </button>
         </div>
       </div>

@@ -8,6 +8,7 @@ export default function Login() {
   const subtitle = "Faça seu Login";
   const navigate = useNavigate();
   const [failed, setFailed] = useState(false);
+  const [loading, setLoading] = useState(false); // 1. Estado de carregamento adicionado
 
   const inputGDuq = useRef(null);
   const inputGPassword = useRef(null);
@@ -33,8 +34,13 @@ export default function Login() {
   }
 
   async function handleLogin() {
+    // Evita chamadas duplicadas se o usuário clicar rápido demais
+    if (loading) return; 
+
     const duq = inputGDuq.current.value;
     const senha = inputGPassword.current.value;
+
+    setLoading(true); // 2. Inicia o loading
 
     try {
       const response = await api.post("/login", {
@@ -56,6 +62,8 @@ export default function Login() {
       setTimeout(() => {
         setFailed(false);
       }, 3000);
+    } finally {
+      setLoading(false); // 3. Desativa o loading quando a requisição terminar (sucesso ou erro)
     }
   }
 
@@ -95,6 +103,7 @@ export default function Login() {
           <input
             placeholder="Digite seu email ou CPF"
             ref={inputGDuq}
+            disabled={loading} // Bloqueia o input durante o loading
           />
 
           <label>Senha</label>
@@ -102,10 +111,19 @@ export default function Login() {
             type="password"
             placeholder="Digite sua senha"
             ref={inputGPassword}
+            disabled={loading} // Bloqueia o input durante o loading
           />
 
-          <button onClick={handleLogin}>
-            Login
+          {/* 4. Botão dinâmico: mostra spinner/texto diferente e fica desabilitado */}
+          <button onClick={handleLogin} disabled={loading} className={loading ? "btn-loading" : ""}>
+            {loading ? (
+              <>
+                <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: '8px' }}></i>
+                Entrando...
+              </>
+            ) : (
+              "Login"
+            )}
           </button>
 
           {/* Adicionada a classe class-link para estilização */}
