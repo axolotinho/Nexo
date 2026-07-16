@@ -1,12 +1,14 @@
 import { useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./style.css";
 import api from "../../../../services/api";
 
 export default function Login() {
   const title = "Funcionário";
-  const subtitle = "Faça seu Login";
+  const subtitle = "Faça seu Cadastro";
+
   const navigate = useNavigate();
+
   const [failed, setFailed] = useState(false);
 
   const inputGDuq = useRef(null);
@@ -32,25 +34,36 @@ export default function Login() {
     });
   }
 
-  async function handleLogin() {
-    const duq = inputGDuq.current.value;
-    const senha = inputGPassword.current.value;
+  async function handleCadastro() {
+    const formData = new FormData();
+
+    formData.append("nome", cadastro.nome);
+    formData.append("cpf", cadastro.cpf);
+    formData.append("email", cadastro.email);
+    formData.append("password", cadastro.password);
+    formData.append("idade", cadastro.idade);
+    formData.append("cargo", cadastro.cargo);
+    formData.append("hora_entrada", cadastro.hora_entrada);
+    formData.append("hora_saida", cadastro.hora_saida);
+
+    if (cadastro.foto) {
+      formData.append("foto", cadastro.foto);
+    }
 
     try {
-      const response = await api.post("/login", {
-        duq,
-        password: senha,
-        cargo: "F",
-      });
-
-      localStorage.setItem(
-        "token",
-        response.data.token
+      await api.post(
+        "/create-user",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        }
       );
 
-      navigate("/home/funcionario");
+      navigate("/login/funcionario");
 
-    } catch(error) {
+    } catch (error) {
       console.log(error);
       setFailed(true);
       setTimeout(() => {
@@ -62,7 +75,7 @@ export default function Login() {
   return (
     <div>
       <div className="header">
-        {/* Botão de voltar adicionado ao lado do cabeçalho */}
+        {/* Botão de voltar responsivo adicionado ao lado do cabeçalho */}
         <button className="btn-back-header" onClick={() => navigate(-1)} title="Voltar">
           <i className="fa-solid fa-arrow-left"></i>
         </button>
@@ -85,33 +98,74 @@ export default function Login() {
       </div>
 
       <div className="login-container">
-        {/* LOGIN GESTOR */}
-        <div className="Gestor">
-          <div className="top gestor">
-            <h2>Login</h2>
+        {/* CADASTRO FUNCIONÁRIO */}
+        <div className="Funcionario">
+          <div className="top funcionario">
+            <h2>Cadastro</h2>
           </div>
 
-          <label>Email ou CPF</label>
+          <label>Nome</label>
           <input
-            placeholder="Digite seu email ou CPF"
-            ref={inputGDuq}
+            name="nome"
+            placeholder="Digite seu nome"
+            onChange={handleCadastroChange}
+          />
+
+          <label>CPF</label>
+          <input
+            name="cpf"
+            placeholder="Digite seu CPF"
+            onChange={handleCadastroChange}
+          />
+
+          <label>Email</label>
+          <input
+            name="email"
+            placeholder="Digite seu email"
+            onChange={handleCadastroChange}
           />
 
           <label>Senha</label>
           <input
             type="password"
+            name="password"
             placeholder="Digite sua senha"
-            ref={inputGPassword}
+            onChange={handleCadastroChange}
           />
 
-          <button onClick={handleLogin}>
-            Login
-          </button>
+          <label>Foto</label>
+          <input
+            type="file"
+            accept="image/*"
+            name="foto"
+            onChange={handleCadastroChange}
+          />
 
-          {/* Adicionada a classe class-link para estilização */}
-          <nav className="class-link">
-            <Link to="/login/funcionario/cadastro">Não tem login? Cadastre-se</Link>
-          </nav>
+          <label>Idade</label>
+          <input
+            type="number"
+            name="idade"
+            placeholder="Digite sua idade"
+            onChange={handleCadastroChange}
+          />
+
+          <label>Hora de entrada</label>
+          <input
+            type="time"
+            name="hora_entrada"
+            onChange={handleCadastroChange}
+          />
+
+          <label>Hora de saída</label>
+          <input
+            type="time"
+            name="hora_saida"
+            onChange={handleCadastroChange}
+          />
+
+          <button onClick={handleCadastro}>
+            Cadastrar
+          </button>
         </div>
       </div>
 
