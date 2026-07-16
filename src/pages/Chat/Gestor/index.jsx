@@ -6,6 +6,18 @@ import img2 from '../../../assets/img2.jpg'
 import api from '../../../services/api'
 import './style.css'
 
+// 1. Lista de cores amigáveis para o fundo do ícone do grupo
+const CORES_GRUPOS = [
+  "#4F46E5", "#06B6D4", "#10B981", "#F59E0B", 
+  "#EC4899", "#8B5CF6", "#EF4444", "#0EA5E9"
+];
+
+// Função auxiliar para pegar uma cor aleatória consistente baseada no ID do grupo
+const obterCorGrupo = (id) => {
+  const index = id % CORES_GRUPOS.length;
+  return CORES_GRUPOS[index];
+};
+
 export default function Home() {
   const title = "Chat"
   const [person, setPerson] = useState(null) // Canal de chat ativo
@@ -15,7 +27,10 @@ export default function Home() {
   // Listas vindas do banco
   const [usuariosBanco, setUsuariosBanco] = useState([]);
   const [gruposBanco, setGruposBanco] = useState([]);
-  
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
   const navigate = useNavigate();
 
   // Inicializa mensagens do LocalStorage
@@ -105,8 +120,7 @@ export default function Home() {
           .map(card => ({
             id: card.grupo.id,
             name: `Grupo: ${card.grupo.nome}`,
-            img: "/group-avatar.png", 
-            type: 'group'
+            type: 'group' // Sem imagem padrão estática
           }));
 
         setGruposBanco(gruposExtraidos);
@@ -145,7 +159,7 @@ export default function Home() {
     setTypedMessage("");
   };
 
-  // Unifica todos os tipos de contatos em uma lista para facilitar o mapeamento uniforme
+  // Unifica todos os tipos de contatos
   const todosOsContatos = [
     ...staticPersons, 
     ...usuariosBanco, 
@@ -159,31 +173,31 @@ export default function Home() {
       <div className="topo">
         <div className="barra">
           <div className="account">
+            {/* Botão de Sair adicionado à esquerda da foto */}
+            <button className="btn-logout" onClick={handleLogout} title="Sair da Conta">
+              <i className="fa-solid fa-right-from-bracket"></i>
+            </button>
+
             <img 
               src={usuario?.foto || "/default-avatar.png"} 
               alt="Foto do usuário"
             />
-            <h3>
-              {usuario?.nome?.split("").map((letter, index) => (
-                <span key={index}>
-                  {letter === " " ? "\u00A0" : letter}
-                </span>
-              ))}
-            </h3>
-            <p>
-              {usuario?.cargo?.split("").map((letter, index) => (
-                <span key={index}>
-                  {letter === " " ? "\u00A0" : letter}
-                </span>
-              ))}
-            </p>
-          </div>
-          <div className="header-home">
-            <h2>
-              {title.split("").map((letter, index) => (
-                <span key={index}>{letter}</span>
-              ))}
-            </h2>
+            <div className="user-details">
+              <h3>
+                {usuario?.nome?.split("").map((letter, index) => (
+                  <span key={index}>
+                    {letter === " " ? "\u00A0" : letter}
+                  </span>
+                ))}
+              </h3>
+              <p>
+                {usuario?.cargo?.split("").map((letter, index) => (
+                  <span key={index}>
+                    {letter === " " ? "\u00A0" : letter}
+                  </span>
+                ))}
+              </p>
+            </div>
           </div>
 
           <div className="links">
@@ -220,7 +234,6 @@ export default function Home() {
           <div className="chat-section-title">Conversas</div>
           
           {todosOsContatos.map((p) => {
-            // Verifica se este item específico é o que está ativo no momento
             const isSelected = person?.type === p.type && person?.id === p.id;
             
             return (
@@ -229,7 +242,19 @@ export default function Home() {
                 onClick={() => setPerson(p)}
                 className={isSelected ? "active-person" : ""}
               >
-                <img src={p.img} alt={p.name} />
+                {/* Condicional para renderizar Imagem (usuários) ou Ícone Colorido (grupos) */}
+                {p.type === "group" ? (
+                  <div 
+                    className="group-avatar-icon" 
+                    style={{ 
+                      backgroundColor: obterCorGrupo(p.id)
+                    }}
+                  >
+                    <i className="fa-solid fa-comment-dots"></i>
+                  </div>
+                ) : (
+                  <img src={p.img} alt={p.name} />
+                )}
                 {p.name}
               </button>
             );

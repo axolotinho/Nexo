@@ -428,3 +428,15 @@
     }
 
 }
+
+.group-avatar-icon {
+  width: 40px;          /* Ajuste para bater com o tamanho da imagem de usuário no seu CSS */
+  height: 40px;         /* Ajuste para bater com o tamanho da imagem de usuário no seu CSS */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;       /* Cor branca para o ícone */
+  font-size: 1.1rem;
+  flex-shrink: 0;       /* Evita que o avatar esmague se o texto do botão for longo */
+}

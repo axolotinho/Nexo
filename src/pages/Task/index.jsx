@@ -12,7 +12,10 @@ export default function Task() {
   const [cards, setCards] = useState([])
   const [userId, setUserId] = useState(null)
   const [usuario, setUsuario] = useState(null);
-  
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  }; 
   // 1. ADICIONADO: Estado para controlar o carregamento dos cards
   const [loading, setLoading] = useState(true);
 
@@ -106,26 +109,31 @@ export default function Task() {
       <div className="topo">
         <div className="barra">
           <div className="account">
+            {/* Botão de Sair adicionado à esquerda da foto */}
+            <button className="btn-logout" onClick={handleLogout} title="Sair da Conta">
+              <i className="fa-solid fa-right-from-bracket"></i>
+            </button>
+
             <img 
               src={usuario?.foto || "/default-avatar.png"} 
               alt="Foto do usuário"
             />
-
-            <h3>
-              {usuario?.nome?.split("").map((letter, index) => (
-                <span key={index}>
-                  {letter === " " ? "\u00A0" : letter}
-                </span>
-              ))}
-            </h3>
-
-            <p>
-              {usuario?.cargo?.split("").map((letter, index) => (
-                <span key={index}>
-                  {letter === " " ? "\u00A0" : letter}
-                </span>
-              ))}
-            </p>
+            <div className="user-details">
+              <h3>
+                {usuario?.nome?.split("").map((letter, index) => (
+                  <span key={index}>
+                    {letter === " " ? "\u00A0" : letter}
+                  </span>
+                ))}
+              </h3>
+              <p>
+                {usuario?.cargo?.split("").map((letter, index) => (
+                  <span key={index}>
+                    {letter === " " ? "\u00A0" : letter}
+                  </span>
+                ))}
+              </p>
+            </div>
           </div>
           <div className="header-home">
             <h2>

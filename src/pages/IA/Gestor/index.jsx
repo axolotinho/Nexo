@@ -1,33 +1,43 @@
 import { useState, useEffect } from 'react' 
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import api from "../../../services/api"; 
 import './style.css'
 
 export default function Ia() {
   const title = "IA"
-  const description = "Seu assistente de bem-estar"
-  const dia = new Date().getDate();
   const navigate = useNavigate();
   const [usuario, setUsuario] = useState(null);
-  const [aba, setAba] = useState("chat");
-  // Estados da IA de Mentirinha
+  
+  // Controle de mensagens e requisições
   const [inputMessage, setInputMessage] = useState("")
   const [chatHistory, setChatHistory] = useState([
     { id: 1, sender: 'ia', text: 'Olá! Sou o seu assistente de bem-estar. Como está se sentindo no trabalho hoje? Lembre-se de beber água!' }
   ])
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  }; 
+  // Contador de requisições enviadas pelo usuário atual (limite de 20)
+  const [requestCount, setRequestCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Estados do Pomodoro Simulados
-  const [pomodoroMinutes, setPomodoroMinutes] = useState(25)
-  const [pomodoroSeconds, setPomodoroSeconds] = useState(0)
-  const [isPomodoroActive, setIsPomodoroActive] = useState(false)
+  // Função auxiliar para recuperar o Token limpo de forma segura
+  const obterTokenValido = () => {
+    const rawToken = localStorage.getItem("token");
+    if (!rawToken) return null;
+    return rawToken.replace(/^"|"$/g, ''); // Remove aspas do stringify
+  };
 
-  // Segurança de rota
+  // 1. Segurança de Rota e decodificação do Token JWT
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = obterTokenValido();
     if (!token) {
       navigate("/");
+      return;
     }
-     try {
+    
+    try {
       const decoded = jwtDecode(token);
       const nomeCompleto = decoded.nome ? String(decoded.nome).trim() : "";
       const partesNome = nomeCompleto.split(/\s+/); 
@@ -45,6 +55,7 @@ export default function Ia() {
       }
 
       setUsuario({
+        id: decoded.sub,
         nome: nomeExibicao,
         cargo: cargoExibicao,
         foto: decoded.foto
@@ -53,90 +64,122 @@ export default function Ia() {
       console.error("Erro ao decodificar o token:", error);
       navigate("/");
     }
-  }, []);
+  }, [navigate]);
 
-  // Efeito simulado de contagem regressiva do Pomodoro
+  // 2. Carrega o histórico salvo do banco de dados quando o usuário é identificado
   useEffect(() => {
-    let interval = null;
-    if (isPomodoroActive) {
-      interval = setInterval(() => {
-        if (pomodoroSeconds > 0) {
-          setPomodoroSeconds(pomodoroSeconds - 1);
-        } else if (pomodoroMinutes > 0) {
-          setPomodoroMinutes(pomodoroMinutes - 1);
-          setPomodoroSeconds(59);
-        } else {
-          // Quando acaba o tempo do pomodoro
-          setIsPomodoroActive(false);
-          setPomodoroMinutes(25);
-          setPomodoroSeconds(0);
-          setChatHistory(prev => [
-            ...prev,
-            { id: Date.now(), sender: 'ia', text: '🔔 Parabéns! Você concluiu um ciclo de foco. Que tal uma pausa de 5 minutos agora?' }
-          ]);
+    const carregarHistorico = async () => {
+      const token = obterTokenValido();
+      if (!token) return;
+
+      try {
+        const response = await api.get("/chat/historico", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        const dados = response.data;
+        
+        if (dados && dados.length > 0) {
+          setChatHistory(dados);
+          const enviosIniciais = dados.filter(msg => msg.sender === "user").length;
+          setRequestCount(enviosIniciais);
         }
-      }, 1000);
-    } else {
-      clearInterval(interval);
+      } catch (error) {
+        console.error("Erro ao carregar histórico do chat:", error);
+      }
+    };
+
+    if (usuario) {
+      carregarHistorico();
     }
-    return () => clearInterval(interval);
-   
-  }, [isPomodoroActive, pomodoroMinutes, pomodoroSeconds]);
+  }, [usuario]);
 
-  // Função para enviar mensagem para a IA
-  const handleSendToIa = (e) => {
+  // 3. Envia a mensagem real para o backend (que agora se comunica com a Groq)
+  const handleSendToIa = async (e) => {
     e.preventDefault();
-    if (!inputMessage.trim()) return;
+    if (!inputMessage.trim() || isLoading) return;
 
-    const userMsg = { id: Date.now(), sender: 'user', text: inputMessage };
+    const userMsgText = inputMessage;
+    const userMsg = { id: Date.now(), sender: 'user', text: userMsgText };
+    
     setChatHistory(prev => [...prev, userMsg]);
     setInputMessage("");
+    setIsLoading(true);
 
-    // Respostas automáticas simuladas baseadas em palavras-chave
-    setTimeout(() => {
-      let reply = "Estou aqui para ajudar a equilibrar sua rotina de trabalho. O que acha de fazermos um alongamento de 2 minutos?";
-      const msgLower = inputMessage.toLowerCase();
-
-      if (msgLower.includes("cansado") || msgLower.includes("exaurido") || msgLower.includes("sono")) {
-        reply = "Parece que você está bem cansado. Recomendo fazer uma pausa agora! Vá até a janela, respire fundo 3 vezes e beba um copo de água gelada. 💧";
-      } else if (msgLower.includes("foco") || msgLower.includes("concentrar") || msgLower.includes("produtividade")) {
-        reply = "Se precisa de foco total, inicie o timer do Método Pomodoro ali ao lado! Vou silenciar notificações imaginárias para você.";
-      } else if (msgLower.includes("estressado") || msgLower.includes("ansioso") || msgLower.includes("raiva")) {
-        reply = "Se o clima pesou, pare tudo por um instante. Feche os olhos e acompanhe comigo: inspire em 4 segundos, segure por 4 e solte em 4. Você é capaz!";
+    try {
+      const token = obterTokenValido();
+      if (!token) {
+        throw new Error("Token não disponível.");
       }
 
-      setChatHistory(prev => [...prev, { id: Date.now() + 1, sender: 'ia', text: reply }]);
-    }, 1200);
-  }
+      const response = await api.post("/chat", 
+        { message: userMsgText },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      const data = response.data;
+      
+      setChatHistory(prev => [
+        ...prev, 
+        { id: Date.now() + 1, sender: 'ia', text: data.reply }
+      ]);
+      setRequestCount(prev => prev + 1);
+
+    } catch (error) {
+      console.error("Erro na comunicação com a API de chat:", error);
+      
+      if (error.response?.status === 401) {
+        setChatHistory(prev => [
+          ...prev,
+          { id: Date.now() + 1, sender: 'ia', text: "Sua sessão expirou ou o token é inválido. Por favor, faça login novamente." }
+        ]);
+      } else {
+        setChatHistory(prev => [
+          ...prev,
+          { id: Date.now() + 1, sender: 'ia', text: "Ops! Ocorreu um erro ao conectar ao servidor." }
+        ]);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div>
       <div className="topo">
         <div className="barra">
-          {/* ÁREA DA CONTA CORRIGIDA */}
+          {/* ÁREA DA CONTA */}
           <div className="account">
+            {/* Botão de Sair adicionado à esquerda da foto */}
+            <button className="btn-logout" onClick={handleLogout} title="Sair da Conta">
+              <i className="fa-solid fa-right-from-bracket"></i>
+            </button>
+
             <img 
               src={usuario?.foto || "/default-avatar.png"} 
               alt="Foto do usuário"
             />
-
-            {/* Corrige os espaços no nome */}
-            <h3>
-              {usuario?.nome?.split("").map((letter, index) => (
-                <span key={index}>
-                  {letter === " " ? "\u00A0" : letter}
-                </span>
-              ))}
-            </h3>
-
-            {/* Corrige os espaços no cargo */}
-            <p>
-              {usuario?.cargo?.split("").map((letter, index) => (
-                <span key={index}>
-                  {letter === " " ? "\u00A0" : letter}
-                </span>
-              ))}
-            </p>
+            <div className="user-details">
+              <h3>
+                {usuario?.nome?.split("").map((letter, index) => (
+                  <span key={index}>
+                    {letter === " " ? "\u00A0" : letter}
+                  </span>
+                ))}
+              </h3>
+              <p>
+                {usuario?.cargo?.split("").map((letter, index) => (
+                  <span key={index}>
+                    {letter === " " ? "\u00A0" : letter}
+                  </span>
+                ))}
+              </p>
+            </div>
           </div>
           <div className="header-home">
             <h2>
@@ -147,25 +190,29 @@ export default function Ia() {
           </div>
 
           <div className="links">
-            <button onClick={() => navigate("/home/gestor")}>
+            <button onClick={() => navigate(usuario?.cargo === "Gestor" ? "/home/gestor" : "/home/funcionario")}>
               <i className="fa-solid fa-house"></i>
             </button>
 
-            <button onClick={() => navigate("/calendar/gestor")}>
+            <button onClick={() => navigate(usuario?.cargo === "Gestor" ? "/calendar/gestor" : "/calendar/funcionario")}>
               <i className="fa-solid fa-calendar"></i>
             </button>
 
-            <button onClick={() => navigate("/monitoring")}>
-              <i className="fa-solid fa-eye"></i>
-            </button>
+            {usuario?.cargo === "Gestor" && (
+              <button onClick={() => navigate("/monitoring")}>
+                <i className="fa-solid fa-eye"></i>
+              </button>
+            )}
 
-            <button onClick={() => navigate("/chat/gestor")}>
+            <button onClick={() => navigate(usuario?.cargo === "Gestor" ? "/chat/gestor" : "/chat/funcionario")}>
               <i className="fa-solid fa-comment-dots"></i>
             </button>
 
-            <button onClick={() => navigate("/create")}>
-              <i className="fa-solid fa-plus"></i>
-            </button>
+            {usuario?.cargo === "Gestor" && (
+              <button onClick={() => navigate("/create")}>
+                <i className="fa-solid fa-plus"></i>
+              </button>
+            )}
 
             <button className='active'>
               <i className="fa-solid fa-dove"></i>
@@ -173,11 +220,10 @@ export default function Ia() {
           </div>
         </div>
       </div>
-      {/* Grid Principal da IA */}
+
+      {/* Grid Principal do Chat */}
       <div className="layout-ia2">
-        
-        {/* Painel Esquerdo: Chat com a IA */}
-        <div className={`ia-chat-box ${aba !== "chat" ? "mobile-hidden" : ""}`}>
+        <div className="ia-chat-box">
           <div className="ia-chat-header">
             <i className="fa-solid fa-dove"></i> <span>Dovely - Assistente Ativo</span>
           </div>
@@ -190,16 +236,24 @@ export default function Ia() {
                 </div>
               </div>
             ))}
+            {isLoading && (
+              <div className="ia-msg-container ia">
+                <div className="ia-msg-bubble" style={{ opacity: 0.6 }}>
+                  Digitando...
+                </div>
+              </div>
+            )}
           </div>
 
           <form onSubmit={handleSendToIa} className="ia-chat-keyboard">
             <input 
               type="text" 
-              placeholder="Fale com a IA sobre seu bem-estar ou rotina..." 
+              placeholder={requestCount >= 20 ? "Limite diário de interações atingido." : "Fale com a IA sobre seu bem-estar ou rotina..."} 
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
+              disabled={requestCount >= 20 || isLoading}
             />
-            <button type="submit">
+            <button type="submit" disabled={requestCount >= 20 || isLoading}>
               <i className="fa-solid fa-paper-plane"></i>
             </button>
           </form>

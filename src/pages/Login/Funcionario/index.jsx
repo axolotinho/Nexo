@@ -62,6 +62,11 @@ export default function Login() {
   return (
     <div>
       <div className="header">
+        {/* Botão de voltar adicionado ao lado do cabeçalho */}
+        <button className="btn-back-header" onClick={() => navigate(-1)} title="Voltar">
+          <i className="fa-solid fa-arrow-left"></i>
+        </button>
+
         <h2>
           {title.split("").map((letter, index) => (
             <span key={index}>

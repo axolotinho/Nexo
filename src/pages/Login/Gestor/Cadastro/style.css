@@ -124,6 +124,7 @@ body {
 .header h3 span:nth-child(11) { animation-delay: 0.8s; }
 .header h3 span:nth-child(12) { animation-delay: 0.83s; }
 .header h3 span:nth-child(13) { animation-delay: 0.86s; }
+.header h3 span:nth-child(14) { animation-delay: 0.89s; }
 
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(15px); }

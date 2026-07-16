@@ -15,6 +15,11 @@ export default function Home() {
 
   const [loading, setLoading] = useState(true);
 
+  // Função para fazer logout e limpar a sessão
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
 
   async function getKanban(){
     const kanbanFromApi = await api.get('/kanban')
@@ -85,6 +90,11 @@ export default function Home() {
         <div className="barra">
 
           <div className="account">
+            {/* Botão de Sair adicionado à esquerda da foto */}
+            <button className="btn-logout" onClick={handleLogout} title="Sair da Conta">
+              <i className="fa-solid fa-right-from-bracket"></i>
+            </button>
+
             <img 
               src={usuario?.foto || "/default-avatar.png"} 
               alt="Foto do usuário"

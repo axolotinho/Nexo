@@ -30,6 +30,11 @@ export default function Calendar() {
   const navigate = useNavigate();
   const [card, setCard] = useState([])
 
+  // Função para fazer logout e limpar a sessão
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
   async function getCard(){
     try {
       const cardFromApi = await api.get('/card')
@@ -94,24 +99,31 @@ export default function Calendar() {
       <div className="topo">
         <div className="barra">
           <div className="account">
+            {/* Botão de Sair adicionado à esquerda da foto */}
+            <button className="btn-logout" onClick={handleLogout} title="Sair da Conta">
+              <i className="fa-solid fa-right-from-bracket"></i>
+            </button>
+
             <img 
               src={usuario?.foto || "/default-avatar.png"} 
               alt="Foto do usuário"
             />
-            <h3>
-              {usuario?.nome?.split("").map((letter, index) => (
-                <span key={index}>
-                  {letter === " " ? "\u00A0" : letter}
-                </span>
-              ))}
-            </h3>
-            <p>
-              {usuario?.cargo?.split("").map((letter, index) => (
-                <span key={index}>
-                  {letter === " " ? "\u00A0" : letter}
-                </span>
-              ))}
-            </p>
+            <div className="user-details">
+              <h3>
+                {usuario?.nome?.split("").map((letter, index) => (
+                  <span key={index}>
+                    {letter === " " ? "\u00A0" : letter}
+                  </span>
+                ))}
+              </h3>
+              <p>
+                {usuario?.cargo?.split("").map((letter, index) => (
+                  <span key={index}>
+                    {letter === " " ? "\u00A0" : letter}
+                  </span>
+                ))}
+              </p>
+            </div>
           </div>
 
           <div className="header-home">

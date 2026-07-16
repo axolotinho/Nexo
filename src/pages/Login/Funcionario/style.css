@@ -96,6 +96,7 @@ body {
 .header h2 span:nth-child(9) { animation-delay: 0.9s; }
 .header h2 span:nth-child(10) { animation-delay: 1.0s; }
 .header h2 span:nth-child(11) { animation-delay: 1.1s; }
+.header h2 span:nth-child(12) { animation-delay: 1.2s; }
 
 .header h3 {
   color: #ffffff;
@@ -419,5 +420,75 @@ input[type="file"] {
 
   .class-link a:hover {
     background-color: #e4edf5;
+  }
+}
+
+/* ===== Botão de Voltar Responsivo ===== */
+.btn-back-header {
+  position: absolute;
+  left: 30px; /* Um pouco mais afastado da borda */
+  top: 50%;
+  transform: translateY(-50%); /* Centraliza verticalmente */
+  background: transparent;
+  border: none;
+  color: #FFFFFF; 
+  font-size: 2.2rem; /* Tamanho confortável para desktop */
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 50%;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5; /* Garante que fique acima de círculos flutuantes */
+}
+
+.btn-back-header:hover {
+  background-color: rgba(255, 255, 255, 0.15); /* Efeito suave condizente com o fundo azul */
+  transform: translateY(-50%) scale(1.1); 
+}
+
+.btn-back-header:active {
+  transform: translateY(-50%) scale(0.95); /* Feedback ao ser clicado */
+}
+
+/* ==========================================
+   Responsividade do Botão de Voltar
+   ========================================== */
+
+/* Em tablets e celulares */
+@media (max-width: 768px) {
+  .header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 80px; /* Abre espaço no topo para o botão não esmagar o título */
+  }
+
+  .btn-back-header {
+    position: absolute;
+    top: 20px; /* Posiciona fixo no topo esquerdo */
+    left: 20px;
+    transform: none; /* Remove o translateY que centralizava verticalmente */
+    font-size: 1.8rem; /* Ícone ligeiramente menor para telas menores */
+    padding: 8px;
+  }
+
+  .btn-back-header:hover {
+    transform: scale(1.05); /* Sobrescreve o hover do desktop para não quebrar o alinhamento */
+  }
+  
+  .btn-back-header:active {
+    transform: scale(0.95);
+  }
+}
+
+/* Em celulares muito pequenos (ex: iPhone SE) */
+@media (max-width: 400px) {
+  .btn-back-header {
+    font-size: 1.6rem;
+    left: 15px;
+    top: 15px;
   }
 }

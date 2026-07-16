@@ -1,62 +1,94 @@
 import { useState, useEffect } from 'react' 
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import api from "../../../services/api"; 
 import './style.css'
 
 export default function Ia() {
   const title = "IA"
   const description = "Seu assistente de bem-estar"
+  const cargo = "Funcionário"
   const dia = new Date().getDate();
   const navigate = useNavigate();
   const [usuario, setUsuario] = useState(null);
   const [aba, setAba] = useState("chat");
-  // Estados da IA de Mentirinha
+  
+  // Controle de mensagens e requisições
   const [inputMessage, setInputMessage] = useState("")
   const [chatHistory, setChatHistory] = useState([
     { id: 1, sender: 'ia', text: 'Olá! Sou o seu assistente de bem-estar. Como está se sentindo no trabalho hoje? Lembre-se de beber água!' }
   ])
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+  // Contador de requisições enviadas pelo usuário atual (máximo 5)
+  const [requestCount, setRequestCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Estados do Pomodoro Simulados
   const [pomodoroMinutes, setPomodoroMinutes] = useState(25)
   const [pomodoroSeconds, setPomodoroSeconds] = useState(0)
   const [isPomodoroActive, setIsPomodoroActive] = useState(false)
 
-  // Segurança de rota
+  // Função auxiliar para recuperar o Token limpo de forma segura
+  const obterTokenValido = () => {
+    const rawToken = localStorage.getItem("token");
+    if (!rawToken) return null;
+    return rawToken.replace(/^"|"$/g, ''); // Remove aspas do stringify
+  };
+
+  // 1. Decodifica o Token JWT para carregar as informações do usuário logado
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/");
-    }
-     try {
-      const decoded = jwtDecode(token);
-      const nomeCompleto = decoded.nome ? String(decoded.nome).trim() : "";
-      const partesNome = nomeCompleto.split(/\s+/); 
-      const nomeExibicao = partesNome.slice(0, 2).join(" "); 
-
-      const cargoCru = decoded.cargo ? String(decoded.cargo).trim().toUpperCase() : "";
-      let cargoExibicao = "";
-
-      if (cargoCru === "F") {
-        cargoExibicao = "Funcionário";
-      } else if (cargoCru === "G") {
-        cargoExibicao = "Gestor";
-      } else {
-        cargoExibicao = decoded.cargo || "";
+    const token = obterTokenValido();
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setUsuario({
+          id: decoded.sub,
+          nome: decoded.nome || "Usuário",
+          cargo: decoded.cargo || "Funcionário",
+          foto: decoded.foto || null
+        });
+      } catch (error) {
+        console.error("Erro ao decodificar o token:", error);
+        localStorage.removeItem("token");
+        navigate("/login"); 
       }
-
-      setUsuario({
-        nome: nomeExibicao,
-        cargo: cargoExibicao,
-        foto: decoded.foto
-      });
-      if (cargoCru == "G"){
-        navigate("/home/gestor");
-      }
-    } catch (error) {
-      console.error("Erro ao decodificar o token:", error);
-      navigate("/");
+    } else {
+      navigate("/login"); 
     }
-  }, []);
+  }, [navigate]);
+
+  // 2. Carrega o histórico salvo do banco de dados quando o usuário é identificado
+  useEffect(() => {
+    const carregarHistorico = async () => {
+      const token = obterTokenValido();
+      if (!token) return; // Aborta se o token sumir de repente
+
+      try {
+        const response = await api.get("/chat/historico", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        const dados = response.data;
+        
+        if (dados && dados.length > 0) {
+          setChatHistory(dados);
+          const enviosIniciais = dados.filter(msg => msg.sender === "user").length;
+          setRequestCount(enviosIniciais);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar histórico do chat:", error);
+      }
+    };
+
+    // Só dispara se o usuário já estiver de fato carregado no estado
+    if (usuario) {
+      carregarHistorico();
+    }
+  }, [usuario]);
 
   // Efeito simulado de contagem regressiva do Pomodoro
   useEffect(() => {
@@ -69,7 +101,6 @@ export default function Ia() {
           setPomodoroMinutes(pomodoroMinutes - 1);
           setPomodoroSeconds(59);
         } else {
-          // Quando acaba o tempo do pomodoro
           setIsPomodoroActive(false);
           setPomodoroMinutes(25);
           setPomodoroSeconds(0);
@@ -83,63 +114,91 @@ export default function Ia() {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-   
   }, [isPomodoroActive, pomodoroMinutes, pomodoroSeconds]);
 
-  // Função para enviar mensagem para a IA
-  const handleSendToIa = (e) => {
+  const handleSendToIa = async (e) => {
     e.preventDefault();
-    if (!inputMessage.trim()) return;
+    if (!inputMessage.trim() || isLoading) return;
 
-    const userMsg = { id: Date.now(), sender: 'user', text: inputMessage };
+    const userMsgText = inputMessage;
+    const userMsg = { id: Date.now(), sender: 'user', text: userMsgText };
+    
     setChatHistory(prev => [...prev, userMsg]);
     setInputMessage("");
+    setIsLoading(true);
 
-    // Respostas automáticas simuladas baseadas em palavras-chave
-    setTimeout(() => {
-      let reply = "Estou aqui para ajudar a equilibrar sua rotina de trabalho. O que acha de fazermos um alongamento de 2 minutos?";
-      const msgLower = inputMessage.toLowerCase();
-
-      if (msgLower.includes("cansado") || msgLower.includes("exaurido") || msgLower.includes("sono")) {
-        reply = "Parece que você está bem cansado. Recomendo fazer uma pausa agora! Vá até a janela, respire fundo 3 vezes e beba um copo de água gelada. 💧";
-      } else if (msgLower.includes("foco") || msgLower.includes("concentrar") || msgLower.includes("produtividade")) {
-        reply = "Se precisa de foco total, inicie o timer do Método Pomodoro ali ao lado! Vou silenciar notificações imaginárias para você.";
-      } else if (msgLower.includes("estressado") || msgLower.includes("ansioso") || msgLower.includes("raiva")) {
-        reply = "Se o clima pesou, pare tudo por um instante. Feche os olhos e acompanhe comigo: inspire em 4 segundos, segure por 4 e solte em 4. Você é capaz!";
+    try {
+      const token = obterTokenValido();
+      if (!token) {
+        throw new Error("Token não disponível.");
       }
 
-      setChatHistory(prev => [...prev, { id: Date.now() + 1, sender: 'ia', text: reply }]);
-    }, 1200);
-  }
+      const response = await api.post("/chat", 
+        { message: userMsgText },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      const data = response.data;
+      
+      setChatHistory(prev => [
+        ...prev, 
+        { id: Date.now() + 1, sender: 'ia', text: data.reply }
+      ]);
+      setRequestCount(prev => prev + 1);
+
+    } catch (error) {
+      console.error("Erro na comunicação com a API de chat:", error);
+      
+      if (error.response?.status === 401) {
+        setChatHistory(prev => [
+          ...prev,
+          { id: Date.now() + 1, sender: 'ia', text: "Sua sessão expirou ou o token é inválido. Por favor, faça login novamente." }
+        ]);
+      } else {
+        setChatHistory(prev => [
+          ...prev,
+          { id: Date.now() + 1, sender: 'ia', text: "Ops! Ocorreu um erro ao conectar ao servidor." }
+        ]);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div>
       <div className="topo">
         <div className="barra">
-          {/* ÁREA DA CONTA CORRIGIDA */}
           <div className="account">
+            {/* Botão de Sair adicionado à esquerda da foto */}
+            <button className="btn-logout" onClick={handleLogout} title="Sair da Conta">
+              <i className="fa-solid fa-right-from-bracket"></i>
+            </button>
+
             <img 
               src={usuario?.foto || "/default-avatar.png"} 
               alt="Foto do usuário"
             />
-
-            {/* Corrige os espaços no nome */}
-            <h3>
-              {usuario?.nome?.split("").map((letter, index) => (
-                <span key={index}>
-                  {letter === " " ? "\u00A0" : letter}
-                </span>
-              ))}
-            </h3>
-
-            {/* Corrige os espaços no cargo */}
-            <p>
-              {usuario?.cargo?.split("").map((letter, index) => (
-                <span key={index}>
-                  {letter === " " ? "\u00A0" : letter}
-                </span>
-              ))}
-            </p>
+            <div className="user-details">
+              <h3>
+                {usuario?.nome?.split("").map((letter, index) => (
+                  <span key={index}>
+                    {letter === " " ? "\u00A0" : letter}
+                  </span>
+                ))}
+              </h3>
+              <p>
+                {cargo.split("").map((letter, index) => (
+                  <span key={index}>
+                    {letter === " " ? "\u00A0" : letter}
+                  </span>
+                ))}
+              </p>
+            </div>
           </div>
           <div className="header-home">
             <h2>
@@ -153,19 +212,15 @@ export default function Ia() {
             <button onClick={() => navigate("/home/funcionario")}>
               <i className="fa-solid fa-house"></i>
             </button>
-
             <button onClick={() => navigate("/calendar/funcionario")}>
               <i className="fa-solid fa-calendar"></i>
             </button>
-
             <button onClick={() => navigate("/chat/funcionario")}>
               <i className="fa-solid fa-comment-dots"></i>
             </button>
-
             <button onClick={() => navigate("/task")}>
               {dia}
             </button>
-
             <button className="active">
               <i className="fa-solid fa-dove"></i>
             </button>
@@ -181,7 +236,6 @@ export default function Ia() {
               <i className="fa-solid fa-dove"></i>
               Assistente
           </button>
-
           <button
               className={aba === "dashboard" ? "active" : ""}
               onClick={() => setAba("dashboard")}
@@ -191,10 +245,7 @@ export default function Ia() {
           </button>
       </div>
 
-      {/* Grid Principal da IA */}
       <div className="layout-ia">
-        
-        {/* Painel Esquerdo: Chat com a IA */}
         <div className={`ia-chat-box ${aba !== "chat" ? "mobile-hidden" : ""}`}>
           <div className="ia-chat-header">
             <i className="fa-solid fa-dove"></i> <span>Dovely - Assistente Ativo</span>
@@ -208,36 +259,39 @@ export default function Ia() {
                 </div>
               </div>
             ))}
+            {isLoading && (
+              <div className="ia-msg-container ia">
+                <div className="ia-msg-bubble" style={{ opacity: 0.6 }}>
+                  Digitando...
+                </div>
+              </div>
+            )}
           </div>
 
           <form onSubmit={handleSendToIa} className="ia-chat-keyboard">
             <input 
               type="text" 
-              placeholder="Fale com a IA sobre seu bem-estar ou rotina..." 
+              placeholder={requestCount >= 20 ? "Limite diário atingido." : "Fale com a IA..."} 
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
+              disabled={requestCount >= 20 || isLoading}
             />
-            <button type="submit">
+            <button type="submit" disabled={requestCount >= 20 || isLoading}>
               <i className="fa-solid fa-paper-plane"></i>
             </button>
           </form>
         </div>
 
-        {/* Painel Direito: Dashboard de Saúde/Trabalho */}
         <div className={`ia-dashboard ${aba !== "dashboard" ? "mobile-hidden" : ""}`}>
-          
-          {/* Card 1: Horas Trabalhadas Diárias (Gráfico Visual) */}
           <div className="dash-card">
             <h4>Jornada de Hoje</h4>
             <div className="working-hours-gauge">
-              {/* Barra circular de progresso em CSS */}
               <div className="circular-progress">
                 <span className="circular-value">6.5h</span>
               </div>
               <p className="gauge-sub">Sua meta de hoje é de 8h</p>
             </div>
             
-            {/* Gráfico de barras simples dos dias da semana */}
             <div className="week-mini-chart">
               <div className="bar-column"><div className="bar-fill" style={{ height: '80%' }}></div><span>S</span></div>
               <div className="bar-column"><div className="bar-fill" style={{ height: '95%' }}></div><span>T</span></div>
@@ -247,7 +301,6 @@ export default function Ia() {
             </div>
           </div>
 
-          {/* Card 2: Método Pomodoro */}
           <div className="dash-card pomodoro-card">
             <h4>Método Pomodoro</h4>
             <div className="pomodoro-timer">
@@ -263,7 +316,6 @@ export default function Ia() {
             </div>
           </div>
 
-          {/* Card 3: Pausa para água e Alertas Rápidos */}
           <div className="dash-card break-card">
             <h4>Alerta de Pausa Ativo</h4>
             <div className="next-break-indicator">
@@ -284,9 +336,7 @@ export default function Ia() {
               </div>
             </div>
           </div>
-
         </div>
-
       </div>
     </div>
   );

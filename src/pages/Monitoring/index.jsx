@@ -13,7 +13,10 @@ export default function Monitoring() {
   const [usuario, setUsuario] = useState(null);
   const [funcionarios, setFuncionarios] = useState([]);
   const [selectedFuncionario, setSelectedFuncionario] = useState(null);
-
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  }; 
   // 1. Carrega os funcionários reais do banco de dados
   // 1. Carrega os funcionários reais do banco de dados e mescla com os fictícios
   async function carregarFuncionarios() {
@@ -33,7 +36,7 @@ export default function Monitoring() {
         .map(u => ({
           id: u.id,
           nome: u.nome,
-          cargo: u.cargo_exibicao || "Atendente de Suporte", // Cargo temático ou o do banco
+          cargo: u.cargo_exibicao || "Social Media", // Cargo temático ou o do banco
           foto: u.foto || null,
           status: Math.random() > 0.3 ? "Online" : "Offline", // Status aleatório para os reais (ou mude para "Online")
           tarefasFeitas: Math.floor(Math.random() * 15) + 5, // Número fictício de tarefas para ilustrar o painel
@@ -48,7 +51,7 @@ export default function Monitoring() {
         {
           id: "mock-1",
           nome: "Lucas Alencar",
-          cargo: "Atendente Sênior (Chat)",
+          cargo: "Story Maker",
           foto: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150",
           status: "Online",
           tarefasFeitas: 18,
@@ -60,7 +63,7 @@ export default function Monitoring() {
         {
           id: "mock-2",
           nome: "Mariana Costa",
-          cargo: "Atendente de Call Center",
+          cargo: "Diretora de Conteúdo",
           foto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150",
           status: "Offline",
           tarefasFeitas: 11,
@@ -130,26 +133,31 @@ export default function Monitoring() {
         <div className="barra">
 
           <div className="account">
+            {/* Botão de Sair adicionado à esquerda da foto */}
+            <button className="btn-logout" onClick={handleLogout} title="Sair da Conta">
+              <i className="fa-solid fa-right-from-bracket"></i>
+            </button>
+
             <img 
               src={usuario?.foto || "/default-avatar.png"} 
               alt="Foto do usuário"
             />
-
-            <h3>
-              {usuario?.nome?.split("").map((letter, index) => (
-                <span key={index}>
-                  {letter === " " ? "\u00A0" : letter}
-                </span>
-              ))}
-            </h3>
-
-            <p>
-              {usuario?.cargo?.split("").map((letter, index) => (
-                <span key={index}>
-                  {letter === " " ? "\u00A0" : letter}
-                </span>
-              ))}
-            </p>
+            <div className="user-details">
+              <h3>
+                {usuario?.nome?.split("").map((letter, index) => (
+                  <span key={index}>
+                    {letter === " " ? "\u00A0" : letter}
+                  </span>
+                ))}
+              </h3>
+              <p>
+                {usuario?.cargo?.split("").map((letter, index) => (
+                  <span key={index}>
+                    {letter === " " ? "\u00A0" : letter}
+                  </span>
+                ))}
+              </p>
+            </div>
           </div>
 
           <div className="header-home">
