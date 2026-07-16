@@ -159,6 +159,7 @@
     gap: 20px;
     border-bottom: 2px solid #f4f8fb;
     padding-bottom: 20px;
+    flex-wrap: wrap; /* Garante espaço para as abas no mobile */
 }
 
 .detail-avatar {
@@ -202,6 +203,36 @@
     background-color: #95a5a6;
 }
 
+/* Navegação por Abas (Métricas / Atividades) */
+.tab-navigation {
+    display: flex;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.tab-btn {
+    background: #f4f8fb;
+    border: 2px solid transparent;
+    padding: 8px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    transition: .25s ease-in-out;
+}
+
+.tab-btn:hover {
+    background: #eef5fa;
+    color: #0d3b66;
+}
+
+.tab-btn.active {
+    background: #2892d7;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(40, 146, 215, 0.25);
+}
+
 /* Grid de Métricas */
 .metrics-grid {
     display: grid;
@@ -238,11 +269,42 @@
     margin: 0;
 }
 
-/* Gráfico de Desempenho Visual */
+/* Gráfico de Desempenho Visual Interativo */
 .performance-chart-section h4 {
     color: #0d3b66;
     font-size: 1.2rem;
+    margin: 0;
+}
+
+.interactive-chart {
+    border: 2px solid transparent;
+    transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+    border-radius: 18px;
+    padding: 20px;
+    background: #ffffff;
+}
+
+.interactive-chart:hover {
+    transform: translateY(-2px);
+    border-color: #2892d7;
+    box-shadow: 0 6px 20px rgba(40, 146, 215, 0.08);
+}
+
+.chart-header-interactive {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 15px;
+}
+
+.click-indicator {
+    font-size: 0.8rem;
+    color: #2892d7;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    animation: bounceRight 1.5s infinite ease-in-out;
 }
 
 .bar-chart {
@@ -306,6 +368,214 @@
     font-weight: 700;
 }
 
+/* --- TELA DE AUDITORIA DE TAREFAS (KANBAN) --- */
+
+.tasks-audit-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    animation: panelFadeIn 0.35s ease-in-out;
+}
+
+.audit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #f4f8fb;
+    padding-bottom: 15px;
+}
+
+.audit-header h3 {
+    color: #0d3b66;
+    font-size: 1.4rem;
+    margin: 0;
+    font-weight: 800;
+}
+
+.back-btn {
+    background: transparent;
+    border: 2px solid #2892d7;
+    color: #2892d7;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 6px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: .25s ease-in-out;
+}
+
+.back-btn:hover {
+    background: #2892d7;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(40, 146, 215, 0.2);
+}
+
+.tasks-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.task-column-kanban {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.task-column-kanban h4 {
+    color: #0d3b66;
+    font-size: 1.1rem;
+    margin: 0;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 5px;
+}
+
+.bullet-progress {
+    width: 10px;
+    height: 10px;
+    background: #f39c12;
+    border-radius: 50%;
+}
+
+.bullet-done {
+    width: 10px;
+    height: 10px;
+    background: #2ecc71;
+    border-radius: 50%;
+}
+
+.task-list-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Card Kanban Customizado */
+.task-card {
+    background: #f4f8fb;
+    border-left: 5px solid #95a5a6;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 8px rgba(0,0,0,.03);
+    transition: transform 0.2s ease;
+}
+
+.task-card:hover {
+    transform: translateY(-2px);
+}
+
+.card-progress {
+    border-left-color: #f39c12;
+}
+
+.card-done {
+    border-left-color: #2ecc71;
+}
+
+.task-card h5 {
+    color: #0d3b66;
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+}
+
+/* Elementos de Progresso */
+.progress-bar-wrapper {
+    margin: 12px 0;
+}
+
+.progress-label {
+    display: block;
+    font-size: 0.75rem;
+    color: #7f8c8d;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.progress-bar-bg {
+    background: #e0e6ed;
+    height: 8px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    background: #f39c12;
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.5s ease-in-out;
+}
+
+.card-footer-meta {
+    font-size: 0.75rem;
+    color: #7f8c8d;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.card-footer-meta i {
+    color: #f39c12;
+}
+
+/* Detalhes do Card Concluído */
+.card-completion-info {
+    font-size: 0.8rem;
+    color: #455a64;
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.card-completion-info strong {
+    color: #0d3b66;
+}
+
+.card-attachments {
+    border-top: 1px dashed #cfd8dc;
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+.card-attachments p {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #7f8c8d;
+    margin: 0 0 6px 0;
+}
+
+.attachment-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.badge-file {
+    background: #ffffff;
+    border: 1px solid #cfd8dc;
+    color: #455a64;
+    padding: 4px 10px;
+    font-size: 0.7rem;
+    border-radius: 6px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: .2s;
+}
+
+.badge-file:hover {
+    border-color: #2892d7;
+    color: #2892d7;
+}
+
+
 /* Dovely I.A Section */
 .dovely-ai-section {
     background: linear-gradient(135deg, #eef7fc 0%, #d8edf8 100%);
@@ -361,11 +631,30 @@
     font-weight: 500;
 }
 
-/* Animaçãozinha do mascote Dovely */
+
+/* --- ANIMAÇÕES --- */
+
 @keyframes dovelyWave {
     0%, 100% { transform: translateY(0) rotate(0); }
     50% { transform: translateY(-3px) rotate(5deg); }
 }
+
+@keyframes panelFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounceRight {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(4px); }
+}
+
 
 /* =========================================================
    RESPONSIVIDADE
@@ -407,6 +696,22 @@
     .detail-header{
         flex-direction:column;
         align-items:flex-start;
+        gap: 15px;
+    }
+
+    .tab-navigation {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .tab-btn {
+        flex: 1;
+        text-align: center;
+    }
+
+    .tasks-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
     }
 
     .detail-avatar{
