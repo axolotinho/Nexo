@@ -254,7 +254,7 @@ export default function Home() {
                 <div className="cards">
                   {card.map((obj) =>
                     obj.kanban_id === kan.id ? (
-                      <div key={obj.id} className="task-card">
+                      <div key={obj.id} className="task-card" onClick={() => navigate(`/task/${obj.id}`)} style={{ cursor: 'pointer' }}>
                         {/* Topo do Card */}
                         <div className="task-card-header">
                           <h4>{obj.title}</h4>

@@ -203,7 +203,7 @@ export default function Calendar() {
                       );
                     })
                     .map((ca) => (
-                      <div key={ca.id} className="card">
+                      <div key={ca.id} className="card" onClick={() => navigate(`/task/${card.id}`)} style={{ cursor: 'pointer' }}>
                         <span>{ca.title}</span>
                       </div>
                     ))}

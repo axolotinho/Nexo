@@ -8,11 +8,17 @@ import './style.css'
 
 export default function Home() {
   const title = "Chat"
-  const [person, setPerson] = useState(null)
+  const [person, setPerson] = useState(null) // Canal de chat ativo
   const [typedMessage, setTypedMessage] = useState("")
   const [usuario, setUsuario] = useState(null);
+  
+  // Listas vindas do banco
+  const [usuariosBanco, setUsuariosBanco] = useState([]);
+  const [gruposBanco, setGruposBanco] = useState([]);
+  
   const navigate = useNavigate();
 
+  // Inicializa mensagens do LocalStorage
   const [messages, setMessages] = useState(() => {
     const savedMessages = localStorage.getItem("chat_messages");
     if (savedMessages) {
@@ -20,36 +26,30 @@ export default function Home() {
     }
 
     return {
-      1: [ // ID da Amanda
+      "user_1": [ 
         { id: 101, sender: 'them', text: 'Oi! Tudo bem?' },
         { id: 102, sender: 'me', text: 'Opa, tudo ótimo! E com você?' },
         { id: 103, sender: 'them', text: 'Tudo certinho também. Conseguiu ver aquele relatório?' }
       ],
-      2: [ // ID do Luíz
+      "user_2": [ 
         { id: 201, sender: 'them', text: 'Fala cara, blz?' },
         { id: 202, sender: 'me', text: 'Fala Luíz, beleza pura!' }
       ]
     };
   });
 
-  const persons = [
-    {
-      id: 1,
-      name: 'Amanda silveira',
-      img: img1
-    },
-    {
-      id: 2,
-      name: 'Luíz carlos',
-      img: img2
-    }
+  // Contatos mockados iniciais
+  const staticPersons = [
+    { id: 10, name: 'Amanda silveira', img: img1, type: 'user' },
+    { id: 11, name: 'Luíz carlos', img: img2, type: 'user' }
   ]
 
-  // Rota de segurança para o Token
+  // Rota de segurança e decodificação do Token JWT
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/");
+      return;
     }
     try {
       const decoded = jwtDecode(token);
@@ -57,7 +57,6 @@ export default function Home() {
       const nomeCompleto = decoded.nome ? String(decoded.nome).trim() : "";
       const partesNome = nomeCompleto.split(/\s+/);
       const nomeExibicao = partesNome.slice(0, 2).join(" ");
-
 
       const cargoCru = decoded.cargo ? String(decoded.cargo).trim().toUpperCase() : "";
       let cargoExibicao = "";
@@ -71,6 +70,7 @@ export default function Home() {
       }
 
       setUsuario({
+        id: decoded.sub || decoded.identity,
         nome: nomeExibicao,
         cargo: cargoExibicao,
         foto: decoded.foto
@@ -79,30 +79,78 @@ export default function Home() {
       console.error("Erro ao decodificar o token:", error);
       navigate("/");
     }
-  }, []);
+  }, [navigate]);
+
+  // Carregar Usuários e Grupos criados do seu Backend
+  useEffect(() => {
+    const carregarDadosDoBanco = async () => {
+      try {
+        const resUsuarios = await api.get("/usuario");
+        const logadoId = usuario?.id;
+        
+        const outrosUsuarios = resUsuarios.data
+          .filter(u => String(u.id) !== String(logadoId))
+          .map(u => ({
+            id: u.id,
+            name: u.nome,
+            img: u.foto || "/default-avatar.png",
+            type: 'user'
+          }));
+        
+        setUsuariosBanco(outrosUsuarios);
+
+        const resCards = await api.get("/card");
+        const gruposExtraidos = resCards.data
+          .filter(card => card.grupo !== null)
+          .map(card => ({
+            id: card.grupo.id,
+            name: `Grupo: ${card.grupo.nome}`,
+            img: "/group-avatar.png", 
+            type: 'group'
+          }));
+
+        setGruposBanco(gruposExtraidos);
+      } catch (err) {
+        console.error("Erro ao buscar contatos/grupos do backend:", err);
+      }
+    };
+
+    if (usuario) {
+      carregarDadosDoBanco();
+    }
+  }, [usuario]);
 
   useEffect(() => {
     localStorage.setItem("chat_messages", JSON.stringify(messages));
   }, [messages]);
 
+  // Enviar Mensagem
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (!typedMessage.trim() || !person) return;
 
+    const chatKey = `${person.type}_${person.id}`;
+
     const newMessage = {
-      id: Date.now(), // ID único temporário
+      id: Date.now(),
       sender: 'me',
       text: typedMessage
     };
 
-    // Atualiza o histórico do contato selecionado
     setMessages(prev => ({
       ...prev,
-      [person.id]: [...(prev[person.id] || []), newMessage]
+      [chatKey]: [...(prev[chatKey] || []), newMessage]
     }));
 
     setTypedMessage("");
   };
+
+  // Unifica todos os tipos de contatos em uma lista para facilitar o mapeamento uniforme
+  const todosOsContatos = [
+    ...staticPersons, 
+    ...usuariosBanco, 
+    ...gruposBanco
+  ];
 
   const dia = new Date().getDate();
 
@@ -110,14 +158,11 @@ export default function Home() {
     <div>
       <div className="topo">
         <div className="barra">
-          {/* ÁREA DA CONTA CORRIGIDA */}
           <div className="account">
             <img 
               src={usuario?.foto || "/default-avatar.png"} 
               alt="Foto do usuário"
             />
-
-            {/* Corrige os espaços no nome */}
             <h3>
               {usuario?.nome?.split("").map((letter, index) => (
                 <span key={index}>
@@ -125,8 +170,6 @@ export default function Home() {
                 </span>
               ))}
             </h3>
-
-            {/* Corrige os espaços no cargo */}
             <p>
               {usuario?.cargo?.split("").map((letter, index) => (
                 <span key={index}>
@@ -172,19 +215,28 @@ export default function Home() {
       </div>
 
       <div className={`layout ${person ? "chat-open" : ""}`}>
+        {/* BARRA LATERAL DE CONVERSAS */}
         <div className={`lateral ${person ? "hide-mobile" : ""}`}>
-          {persons.map((p) => (
-            <button 
-              key={p.id} 
-              onClick={() => setPerson(p)}
-              className={person?.id === p.id ? "active-person" : ""}
-            >
-              <img src={p.img} alt={p.name} />
-              {p.name}
-            </button>
-          ))}
+          <div className="chat-section-title">Conversas</div>
+          
+          {todosOsContatos.map((p) => {
+            // Verifica se este item específico é o que está ativo no momento
+            const isSelected = person?.type === p.type && person?.id === p.id;
+            
+            return (
+              <button 
+                key={`${p.type}-${p.id}`} 
+                onClick={() => setPerson(p)}
+                className={isSelected ? "active-person" : ""}
+              >
+                <img src={p.img} alt={p.name} />
+                {p.name}
+              </button>
+            );
+          })}
         </div>
         
+        {/* ÁREA DO CHAT ATIVO */}
         <div className={`chat ${!person ? "empty-chat" : ""}`}>
           {person ? (
             <div>
@@ -205,7 +257,7 @@ export default function Home() {
 
               {/* HISTÓRICO DE MENSAGENS */}
               <div className="history">
-                {(messages[person.id] || []).map((msg) => (
+                {(messages[`${person.type}_${person.id}`] || []).map((msg) => (
                   <div key={msg.id} className={`message-container ${msg.sender}`}>
                     <div className="message-bubble">
                       {msg.text}

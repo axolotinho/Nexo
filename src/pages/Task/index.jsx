@@ -177,7 +177,7 @@ export default function Task() {
           </div>
         ) : minhasTarefas.length > 0 ? (
           minhasTarefas.map((card) => (
-            <div key={card.id} className="task-card">
+            <div key={card.id} className="task-card" onClick={() => navigate(`/task/${card.id}`)} style={{ cursor: 'pointer' }}>
               <div className="task-header">
                 <h3>{card.title}</h3>
               </div>

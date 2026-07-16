@@ -15,6 +15,7 @@ import CadastroG from "./pages/Login/Gestor/Cadastro";
 import Task from "./pages/Task";
 import Monitoring from "./pages/Monitoring";
 import Create from "./pages/Create";
+import TaskDetail from './pages/TaskDetail';
 import './App.css'
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
         <Route path="/task" element={<Task />} />
         <Route path="/monitoring" element={<Monitoring />} />
         <Route path="/create" element={<Create />} />
+        <Route path="/task/:id" element={<TaskDetail />} />
       </Routes>
     </Router>
   );

@@ -255,6 +255,27 @@
     letter-spacing: 1px;
 }
 
+    .btn-back{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+
+        width:40px;
+        height:40px;
+
+        margin-right:10px;
+
+        border:none;
+        border-radius:50%;
+
+        background:#2892d7;
+        color:white;
+
+        cursor:pointer;
+
+        flex-shrink:0;
+    }
+
 /* =========================================================
    RESPONSIVIDADE
 ========================================================= */
@@ -352,26 +373,7 @@
 
     /* Botão voltar */
 
-    .btn-back{
-        display:flex;
-        align-items:center;
-        justify-content:center;
 
-        width:40px;
-        height:40px;
-
-        margin-right:10px;
-
-        border:none;
-        border-radius:50%;
-
-        background:#2892d7;
-        color:white;
-
-        cursor:pointer;
-
-        flex-shrink:0;
-    }
 
     .btn-back:hover{
         background:#0d3b66;

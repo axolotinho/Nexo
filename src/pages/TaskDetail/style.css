@@ -1,0 +1,331 @@
+.task-detail-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: sans-serif;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.btn-voltar {
+  background: #eee;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cronometro-box {
+  background: #ffebeb;
+  color: #d9534f;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+@media (max-width: 768px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel-info, .panel-actions {
+  background: #fdfdfd;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.creator-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.creator-profile img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.thumbnail {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.form-producao {
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.btn-salvar {
+  background: #0275d8;
+  color: white;
+  border: none;
+  padding: 12px;
+  width: 100%;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Estilos do Chat Interno */
+.chat-interno {
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+}
+
+.chat-interno-history {
+  height: 250px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  background: #fafafa;
+}
+
+.comentario-bubble {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.comentario-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.comentario-content {
+  background: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  flex-grow: 1;
+}
+
+.chat-interno-input-box {
+  display: flex;
+  gap: 10px;
+}
+
+.chat-interno-input-box input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.chat-interno-input-box button {
+  background: #5cb85c;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+/* Cabeçalho de Detalhes */
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 25px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Botão Voltar */
+.btn-voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-voltar:hover {
+  background-color: #e2e8f0;
+  color: #1e293b;
+}
+
+/* Caixa do Cronômetro */
+.cronometro-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #f8fafc;
+  padding: 8px 16px;
+  border-radius: 50px;
+  border: 1px solid #e2e8f0;
+}
+
+.btn-timer {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.1s ease, background-color 0.2s ease;
+}
+
+.btn-timer:active {
+  transform: scale(0.92);
+}
+
+.btn-pause {
+  background-color: #ef4444; /* Vermelho para pausar */
+}
+
+.btn-pause:hover {
+  background-color: #dc2626;
+}
+
+.btn-play {
+  background-color: #10b981; /* Verde para retomar */
+}
+
+.btn-play:hover {
+  background-color: #059669;
+}
+
+.timer-text {
+  font-size: 0.95rem;
+  color: #334155;
+}
+
+.timer-text strong {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.1rem;
+  color: #0f172a;
+}
+
+/* Botão Marcar como Pronta */
+.btn-concluir {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #2563eb; /* Azul Destaque */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+
+.btn-concluir:hover {
+  background-color: #1d4ed8;
+}
+
+.btn-concluir:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Container de Carregamento em Tela Cheia */
+.loading-container-fullscreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  width: 100%;
+  font-family: inherit;
+}
+
+/* Spinner Animado */
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #2563eb; /* Azul Destaque */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-container-fullscreen p {
+  color: #64748b;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* Estilização para o indicador de visualização simples */
+.readonly-badge {
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #64748b !important;
+  padding: 8px 16px;
+  gap: 8px;
+}
+
+/* Alerta de modo de leitura na caixa de salvamento */
+.badge-readonly-alert {
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  color: #ef4444;
+  padding: 12px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+/* Inputs bloqueados ficam com opacidade mais suave */
+input[disabled] {
+  cursor: not-allowed;
+  opacity: 0.6;
+}

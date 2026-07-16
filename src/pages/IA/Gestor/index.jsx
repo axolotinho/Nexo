@@ -147,49 +147,34 @@ export default function Ia() {
           </div>
 
           <div className="links">
-            <button onClick={() => navigate("/home/funcionario")}>
+            <button onClick={() => navigate("home/gestor")}>
               <i className="fa-solid fa-house"></i>
             </button>
 
-            <button onClick={() => navigate("/calendar/funcionario")}>
+            <button onClick={() => navigate("/calendar/gestor")}>
               <i className="fa-solid fa-calendar"></i>
             </button>
 
-            <button onClick={() => navigate("/chat/funcionario")}>
+            <button onClick={() => navigate("/monitoring")}>
+              <i className="fa-solid fa-eye"></i>
+            </button>
+
+            <button onClick={() => navigate("/chat/gestor")}>
               <i className="fa-solid fa-comment-dots"></i>
             </button>
 
-            <button onClick={() => navigate("/task")}>
-              {dia}
+            <button onClick={() => navigate("/create")}>
+              <i className="fa-solid fa-plus"></i>
             </button>
 
-            <button className="active">
+            <button className='active'>
               <i className="fa-solid fa-dove"></i>
             </button>
           </div>
         </div>
       </div>
-
-      <div className="ia-tabs">
-          <button
-              className={aba === "chat" ? "active" : ""}
-              onClick={() => setAba("chat")}
-          >
-              <i className="fa-solid fa-dove"></i>
-              Assistente
-          </button>
-
-          <button
-              className={aba === "dashboard" ? "active" : ""}
-              onClick={() => setAba("dashboard")}
-          >
-              <i className="fa-solid fa-chart-line"></i>
-              Análises
-          </button>
-      </div>
-
       {/* Grid Principal da IA */}
-      <div className="layout-ia">
+      <div className="layout-ia2">
         
         {/* Painel Esquerdo: Chat com a IA */}
         <div className={`ia-chat-box ${aba !== "chat" ? "mobile-hidden" : ""}`}>
@@ -219,71 +204,6 @@ export default function Ia() {
             </button>
           </form>
         </div>
-
-        {/* Painel Direito: Dashboard de Saúde/Trabalho */}
-        <div className={`ia-dashboard ${aba !== "dashboard" ? "mobile-hidden" : ""}`}>
-          
-          {/* Card 1: Horas Trabalhadas Diárias (Gráfico Visual) */}
-          <div className="dash-card">
-            <h4>Jornada de Hoje</h4>
-            <div className="working-hours-gauge">
-              {/* Barra circular de progresso em CSS */}
-              <div className="circular-progress">
-                <span className="circular-value">6.5h</span>
-              </div>
-              <p className="gauge-sub">Sua meta de hoje é de 8h</p>
-            </div>
-            
-            {/* Gráfico de barras simples dos dias da semana */}
-            <div className="week-mini-chart">
-              <div className="bar-column"><div className="bar-fill" style={{ height: '80%' }}></div><span>S</span></div>
-              <div className="bar-column"><div className="bar-fill" style={{ height: '95%' }}></div><span>T</span></div>
-              <div className="bar-column"><div className="bar-fill" style={{ height: '60%' }}></div><span>Q</span></div>
-              <div className="bar-column"><div className="bar-fill" style={{ height: '100%' }}></div><span>Q</span></div>
-              <div className="bar-column active-day"><div className="bar-fill" style={{ height: '70%' }}></div><span>S</span></div>
-            </div>
-          </div>
-
-          {/* Card 2: Método Pomodoro */}
-          <div className="dash-card pomodoro-card">
-            <h4>Método Pomodoro</h4>
-            <div className="pomodoro-timer">
-              {String(pomodoroMinutes).padStart(2, '0')}:{String(pomodoroSeconds).padStart(2, '0')}
-            </div>
-            <div className="pomodoro-actions">
-              <button onClick={() => setIsPomodoroActive(!isPomodoroActive)} className={isPomodoroActive ? 'btn-stop' : 'btn-start'}>
-                {isPomodoroActive ? <i className="fa-solid fa-pause"></i> : <i className="fa-solid fa-play"></i>}
-              </button>
-              <button onClick={() => { setIsPomodoroActive(false); setPomodoroMinutes(25); setPomodoroSeconds(0); }} className="btn-reset">
-                <i className="fa-solid fa-rotate-right"></i>
-              </button>
-            </div>
-          </div>
-
-          {/* Card 3: Pausa para água e Alertas Rápidos */}
-          <div className="dash-card break-card">
-            <h4>Alerta de Pausa Ativo</h4>
-            <div className="next-break-indicator">
-              <i className="fa-solid fa-mug-hot"></i>
-              <div>
-                <h5>Próximo descanso</h5>
-                <p>Em aproximadamente <strong>45 minutos</strong></p>
-              </div>
-            </div>
-            <div className="water-tracker">
-              <p>Copos d'água hoje:</p>
-              <div className="water-glasses">
-                <i className="fa-solid fa-glass-water active"></i>
-                <i className="fa-solid fa-glass-water active"></i>
-                <i className="fa-solid fa-glass-water active"></i>
-                <i className="fa-solid fa-glass-water"></i>
-                <i className="fa-solid fa-glass-water"></i>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
       </div>
     </div>
   );
