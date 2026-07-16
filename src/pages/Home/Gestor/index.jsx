@@ -276,9 +276,12 @@ export default function Home() {
                         {/* Rodapé do Card */}
                         <div className="task-card-footer">
                           {idxColuna > 0 ? (
-                            <button 
-                              className="btn-move" 
-                              onClick={() => moverCard(obj.id, -1)}
+                            <button
+                              className="btn-move"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                moverCard(obj.id, -1);
+                              }}
                               title="Mover para esquerda"
                             >
                               <i className="fa-solid fa-chevron-left"></i>
@@ -298,9 +301,12 @@ export default function Home() {
                           </div>
 
                           {idxColuna < kanban.length - 1 ? (
-                            <button 
-                              className="btn-move" 
-                              onClick={() => moverCard(obj.id, 1)}
+                            <button
+                              className="btn-move"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                moverCard(obj.id, 1);
+                              }}
                               title="Mover para direita"
                             >
                               <i className="fa-solid fa-chevron-right"></i>
